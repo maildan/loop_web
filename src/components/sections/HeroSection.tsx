@@ -9,21 +9,33 @@ export const HeroSection: React.FC = () => {
       <Container>
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
-            Build Beautiful{' '}
+            모든 채팅을{' '}
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Web Experiences
+              한곳에
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            We create modern, responsive websites that engage your audience and drive business growth.
+            Google Docs, Slack, Notion 등 다양한 플랫폼을 하나로 연결하는 새로운 생산성 앱입니다.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button size="lg" className="text-lg px-8 py-3">
-              Get Started
+              Loop Pro 다운로드
             </Button>
             <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-              View Our Work
+              Loop Novel 체험하기
             </Button>
+          </div>
+
+          {/* Platform logos */}
+          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
+            <div className="text-lg font-medium text-muted-foreground">지원 플랫폼:</div>
+            <div className="flex flex-wrap justify-center gap-6">
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">Google Docs</span>
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">Slack</span>
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">Notion</span>
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">Discord</span>
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">Teams</span>
+            </div>
           </div>
         </div>
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ButtonProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   onClick?: () => void;
@@ -25,6 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
     primary: 'bg-primary text-primary-foreground hover:bg-primary/90',
     secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
     outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+    ghost: 'hover:bg-accent hover:text-accent-foreground',
   };
   
   const sizeClasses = {

@@ -1,27 +1,41 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import {
   Navigation,
   Footer,
   HeroSection,
   AboutSection,
   ServicesSection,
-  PortfolioSection,
-  ContactSection
+  DownloadSection,
+  CloudDashboard
 } from './components';
 
-function App() {
+// Main Landing Page Component
+function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Navigation />
+    <>
       <main>
         <HeroSection />
         <AboutSection />
         <ServicesSection />
-        <PortfolioSection />
-        <ContactSection />
+        <DownloadSection />
       </main>
-      <Footer />
-    </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-background text-foreground">
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/cloud" element={<CloudDashboard />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

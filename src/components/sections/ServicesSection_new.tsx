@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container } from '../ui/Container';
 import { Section } from '../ui/Section';
-import { Card, CardContent } from '../ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 
 export const ServicesSection: React.FC = () => {
@@ -10,11 +10,19 @@ export const ServicesSection: React.FC = () => {
   const osSupport = {
     pro: [
       { name: 'Windows', icon: '🪟', supported: true },
-    ],
-    novel: [
-      { name: 'Windows', icon: '🪟', supported: true },
       { name: 'macOS', icon: '🍎', supported: true },
       { name: 'Linux', icon: '🐧', supported: true },
+      { name: 'Android', icon: '🤖', supported: false },
+      { name: 'iOS', icon: '📱', supported: false },
+      { name: 'Web', icon: '🌐', supported: false },
+    ],
+    novel: [
+      { name: 'Windows', icon: '🪟', supported: false },
+      { name: 'macOS', icon: '🍎', supported: false },
+      { name: 'Linux', icon: '🐧', supported: false },
+      { name: 'Android', icon: '🤖', supported: true },
+      { name: 'iOS', icon: '📱', supported: true },
+      { name: 'Web', icon: '🌐', supported: true },
     ],
   };
 
