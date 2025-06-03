@@ -9,3 +9,4 @@ export { Tabs, TabsList, TabsTrigger, TabsContent } from './Tabs';
 export { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from './Table';
 export { Badge } from './Badge';
 export { Textarea } from './Textarea';
+export { ThemeProvider, useTheme } from './ThemeProvider';

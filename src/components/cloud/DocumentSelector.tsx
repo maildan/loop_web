@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/Button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/DropdownMenu';
-import { ChevronDown, FileText, Folder, Clock, TrendingUp } from 'lucide-react';
+import { ChevronDown, FileText, Folder, Clock, TrendingUp, Eye } from 'lucide-react';
 
 export interface Document {
   id: string;
@@ -117,6 +117,18 @@ export function DocumentSelector({
                   </div>
                 </div>
               </div>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="ml-2 shrink-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDocumentSelect(document);
+                }}
+                aria-label="문서 상세 보기"
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         ))}

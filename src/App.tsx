@@ -8,7 +8,10 @@ import {
   ServicesSection,
   DownloadSection,
   CloudDashboard,
-  CloudNavigation
+  CloudNavigation,
+  ThemeProvider,
+  ProfileSettings,
+  AccountManagement
 } from './components';
 
 // Main Landing Page Component
@@ -38,16 +41,42 @@ function CloudPage() {
   );
 }
 
+// Profile Settings Page Component
+function ProfilePage() {
+  return (
+    <>
+      <CloudNavigation />
+      <ProfileSettings />
+      <Footer />
+    </>
+  );
+}
+
+// Account Management Page Component
+function AccountPage() {
+  return (
+    <>
+      <CloudNavigation />
+      <AccountManagement />
+      <Footer />
+    </>
+  );
+}
+
 function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-background text-foreground">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/cloud" element={<CloudPage />} />
-        </Routes>
-      </div>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <div className="min-h-screen bg-background text-foreground">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/cloud" element={<CloudPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/account" element={<AccountPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

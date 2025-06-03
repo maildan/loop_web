@@ -44,11 +44,15 @@ export function TableBody({ children, className = "" }: TableBodyProps) {
 interface TableRowProps {
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
-export function TableRow({ children, className = "" }: TableRowProps) {
+export function TableRow({ children, className = "", onClick }: TableRowProps) {
   return (
-    <tr className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${className}`}>
+    <tr 
+      className={`border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted ${className} ${onClick ? 'cursor-pointer' : ''}`}
+      onClick={onClick}
+    >
       {children}
     </tr>
   );

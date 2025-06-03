@@ -95,7 +95,7 @@ export const DownloadSection: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
             {downloads[activeTab].map((download, index) => (
-              <Card key={index} className="w-full max-w-sm text-center hover:shadow-lg transition-shadow">
+              <Card key={`${activeTab}-${download.os}-${index}`} className="w-full max-w-sm text-center hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="text-4xl mb-2">{download.icon}</div>
                   <CardTitle className="text-xl">{download.os}</CardTitle>

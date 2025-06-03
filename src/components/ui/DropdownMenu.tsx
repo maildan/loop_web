@@ -56,7 +56,10 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
   );
 };
 
-export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({ children, ...props }) => {
+export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({ children, asChild, ...props }) => {
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children as React.ReactElement, { ...props });
+  }
   return <div {...props}>{children}</div>;
 };
 
@@ -84,7 +87,10 @@ export const DropdownMenuItem: React.FC<{ children: React.ReactNode; onClick?: (
   return (
     <div 
       className="px-3 py-2 text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground flex items-center"
-      onClick={onClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick && onClick();
+      }}
     >
       {children}
     </div>

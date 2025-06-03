@@ -6,14 +6,13 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/Tabs';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../ui/Table';
 import { Badge } from '../ui/Badge';
 import { DocumentSelector, Document } from './DocumentSelector';
+import { DocumentViewer } from './DocumentViewer';
 import { MobileNav } from './MobileNav';
 import { 
   FileText, 
   Clock, 
   TrendingUp, 
   Target,
-  Download,
-  Share,
   Eye,
   Edit
 } from 'lucide-react';
@@ -257,7 +256,10 @@ export function CloudDashboard() {
                   </TableHeader>
                   <TableBody>
                     {mockDocuments.slice(0, 3).map((doc) => (
-                      <TableRow key={doc.id}>
+                      <TableRow key={doc.id} onClick={() => {
+                        setSelectedDocument(doc);
+                        setActiveTab('documents');
+                      }} className="cursor-pointer">
                         <TableCell className="font-medium">{doc.name}</TableCell>
                         <TableCell>
                           <Badge variant="outline">
@@ -270,10 +272,27 @@ export function CloudDashboard() {
                         <TableCell>{doc.wordCount.toLocaleString()}</TableCell>
                         <TableCell>
                           <div className="flex space-x-2">
-                            <Button variant="ghost" size="sm">
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedDocument(doc);
+                                setActiveTab('documents');
+                              }}
+                            >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="sm">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                // 수정 기능 구현 자리
+                                setSelectedDocument(doc);
+                                setActiveTab('documents');
+                              }}
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
                           </div>
@@ -305,49 +324,7 @@ export function CloudDashboard() {
 
               <div className="lg:col-span-2">
                 {selectedDocument ? (
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle>{selectedDocument.name}</CardTitle>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm">
-                            <Share className="h-4 w-4 mr-2" />
-                            공유
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Download className="h-4 w-4 mr-2" />
-                            다운로드
-                          </Button>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid gap-4 md:grid-cols-3">
-                        <div className="text-center p-4 bg-accent rounded-lg">
-                          <div className="text-2xl font-bold">{selectedDocument.wordCount.toLocaleString()}</div>
-                          <div className="text-sm text-muted-foreground">단어 수</div>
-                        </div>
-                        <div className="text-center p-4 bg-accent rounded-lg">
-                          <div className="text-2xl font-bold">{selectedDocument.readingTime}분</div>
-                          <div className="text-sm text-muted-foreground">읽기 시간</div>
-                        </div>
-                        <div className="text-center p-4 bg-accent rounded-lg">
-                          <div className="text-2xl font-bold">
-                            {selectedDocument.lastModified.toLocaleDateString('ko-KR')}
-                          </div>
-                          <div className="text-sm text-muted-foreground">최종 수정</div>
-                        </div>
-                      </div>
-
-                      <div className="border rounded-lg p-4">
-                        <h4 className="font-medium mb-2">문서 미리보기</h4>
-                        <p className="text-muted-foreground">
-                          선택한 문서의 내용이 여기에 표시됩니다. 
-                          Loop를 통해 연결된 문서의 통계와 분석 결과를 확인할 수 있습니다.
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <DocumentViewer document={selectedDocument} />
                 ) : (
                   <Card>
                     <CardContent className="flex items-center justify-center h-96">
