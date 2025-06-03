@@ -48,11 +48,11 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
   };
 
   const navItems = [
-    { href: '#home', label: '홈' },
-    { href: '#about', label: 'Loop' },
-    { href: '#services', label: '서비스' },
-    { href: '#download', label: '다운로드' },
-    { href: '/cloud', label: '클라우드' },
+    { href: '#', label: '홈', id: 'nav-home' },
+    { href: '#about', label: 'Loop', id: 'nav-about' },
+    { href: '#services', label: '서비스', id: 'nav-services' },
+    { href: '#download', label: '다운로드', id: 'nav-download' },
+    { href: '/cloud', label: '클라우드', id: 'nav-cloud' },
   ];
 
   return (
@@ -71,7 +71,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
             {navItems.map((item) => (
               item.href.startsWith('/') ? (
                 <Link
-                  key={item.href}
+                  key={item.id}
                   to={item.href}
                   className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
                 >
@@ -79,7 +79,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
                 </Link>
               ) : (
                 <a
-                  key={item.href}
+                  key={item.id}
                   href={item.href}
                   className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
                 >
@@ -137,7 +137,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
               {navItems.map((item) => (
                 item.href.startsWith('/') ? (
                   <Link
-                    key={item.href}
+                    key={item.id}
                     to={item.href}
                     className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
                     onClick={() => setIsMenuOpen(false)}
@@ -146,7 +146,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
                   </Link>
                 ) : (
                   <a
-                    key={item.href}
+                    key={item.id}
                     href={item.href}
                     className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
                     onClick={() => setIsMenuOpen(false)}

@@ -5,7 +5,6 @@ import { Button } from '../ui/Button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/Tabs';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../ui/Table';
 import { Badge } from '../ui/Badge';
-import { Avatar } from '../ui/Avatar';
 import { DocumentSelector, Document } from './DocumentSelector';
 import { MobileNav } from './MobileNav';
 import { 
@@ -105,27 +104,18 @@ export function CloudDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <Container>
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-xl font-bold">Loop Cloud</h1>
-              <Badge variant="secondary">Beta</Badge>
-            </div>
-            <div className="flex items-center space-x-4">
-              <MobileNav activeSection={activeTab} onSectionChange={setActiveTab} />
-              <Avatar
-                src=""
-                alt="사용자 프로필"
-                fallback="사용자"
-              />
-            </div>
-          </div>
-        </Container>
-      </div>
-
+    <div className="min-h-screen bg-background pt-6 pb-16">
       <Container className="py-8">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-4">
+            <h1 className="text-2xl font-bold">대시보드</h1>
+            <Badge variant="secondary">Beta</Badge>
+          </div>
+          <div className="flex md:hidden items-center">
+            <MobileNav activeSection={activeTab} onSectionChange={setActiveTab} />
+          </div>
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="hidden md:flex grid-cols-3">
             <TabsTrigger value="overview">대시보드</TabsTrigger>

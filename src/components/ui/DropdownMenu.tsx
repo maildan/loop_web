@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 interface DropdownMenuProps {
   children: React.ReactNode;
@@ -17,11 +17,47 @@ interface DropdownMenuContentProps {
 }
 
 export const DropdownMenu: React.FC<DropdownMenuProps> = ({ children }) => {
-  return <div className="relative">{children}</div>;
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  return (
+    <div className="relative" ref={menuRef}>
+      {React.Children.map(children, child => {
+        if (React.isValidElement(child)) {
+          if (child.type === DropdownMenuTrigger) {
+            return React.cloneElement(child as React.ReactElement<any>, {
+              onClick: () => setIsOpen(!isOpen),
+            });
+          }
+          if (child.type === DropdownMenuContent) {
+            return isOpen ? child : null;
+          }
+        }
+        return child;
+      })}
+    </div>
+  );
 };
 
-export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({ children }) => {
-  return <>{children}</>;
+export const DropdownMenuTrigger: React.FC<DropdownMenuTriggerProps> = ({ children, ...props }) => {
+  return <div {...props}>{children}</div>;
 };
 
 export const DropdownMenuContent: React.FC<DropdownMenuContentProps> = ({ className = '', children }) => {
