@@ -21,9 +21,9 @@ export function Badge({
   };
 
   const sizes = {
-    sm: 'px-2.5 py-1 text-xs',
-    default: 'px-3 py-1 text-sm',
-    lg: 'px-4 py-1.5 text-base'
+    sm: 'px-2 py-0.5 text-xs',
+    default: 'px-2.5 py-0.5 text-xs',
+    lg: 'px-3 py-1 text-xs md:px-3 md:py-1 md:text-sm'
   };
 
   return (

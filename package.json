@@ -3,7 +3,6 @@
   "version": "0.1.1",
   "private": true,
   "homepage": "/",
-  "proxy": "http://172.28.13.93:3001/",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -14,6 +13,9 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/react-router-dom": "^5.3.3",
+    "compression": "^1.8.0",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -24,9 +26,14 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "start:dev": "NODE_ENV=development craco start",
+    "build": "NODE_ENV=production craco build",
+    "build:dev": "NODE_ENV=development craco build",
+    "build:analyze": "ANALYZE=true NODE_ENV=production craco build",
+    "serve": "node server.js",
+    "prod": "yarn build && yarn serve",
+    "test": "craco test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,8 +55,14 @@
     ]
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.0",
-    "postcss": "^8.4.0",
-    "tailwindcss": "^3.4.0"
+    "@craco/craco": "^7.1.0",
+    "@tailwindcss/postcss": "^4.1.8",
+    "autoprefixer": "^10.4.21",
+    "craco-alias": "^3.0.1",
+    "postcss": "^8.5.4",
+    "postcss-cli": "^11.0.1",
+    "postcss-loader": "^8.1.1",
+    "tailwindcss": "^4.1.8",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

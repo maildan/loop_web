@@ -8,7 +8,7 @@ import { Badge } from '../ui/Badge';
 
 export function AccountManagement() {
   return (
-    <div className="min-h-screen bg-background pt-6 pb-16">
+    <div className="bg-background pt-6 pb-16 overflow-x-hidden">
       <Container className="py-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold">계정 관리</h1>

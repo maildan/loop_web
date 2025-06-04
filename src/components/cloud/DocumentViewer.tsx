@@ -169,7 +169,7 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
   const appType = getAppTypeInfo(document.type);
 
   return (
-    <Card>
+    <Card className="overflow-hidden overflow-x-hidden">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -182,7 +182,7 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
               {appType.icon} {appType.label}
             </Badge>
           </div>
-          <div className="flex space-x-2">
+          <div className="flex space-x-2 overflow-hidden">
             <Button variant="outline" size="sm">
               <Share className="h-4 w-4 mr-2" />
               공유
@@ -198,7 +198,7 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
           </div>
         </div>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 overflow-hidden overflow-x-hidden">
         <div className="grid gap-4 md:grid-cols-3 mb-6">
           <div className="text-center p-4 bg-accent rounded-lg">
             <div className="text-2xl font-bold">{document.wordCount.toLocaleString()}</div>
@@ -219,7 +219,7 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
         {/* 문서 세그먼트 분석 차트들 */}
         <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-6">
           {/* 1. 문서 구성 분석 차트 */}
-          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden document-composition-chart">
+          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden overflow-x-hidden document-composition-chart">
             <h3 className="chart-title font-medium mb-4 text-center text-sm">문서 구성 분석</h3>
             
             {/* 모바일에서는 텍스트 기반 구성 표시 */}
@@ -290,7 +290,7 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
           </div>
 
           {/* 2. 텍스트 밀도 분석 차트 */}
-          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden text-density-chart">
+          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden overflow-x-hidden text-density-chart">
             <h3 className="chart-title font-medium mb-4 text-center text-sm">텍스트 밀도</h3>
             
             {/* 모바일에서는 텍스트 기반 구성 표시 */}
@@ -375,7 +375,7 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
           </div>
 
           {/* 3. 가독성 점수 차트 */}
-          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden readability-score-chart">
+          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden overflow-x-hidden readability-score-chart">
             <h3 className="chart-title font-medium mb-4 text-center text-sm">가독성 점수</h3>
             
             {/* 모바일에서는 텍스트 기반 구성 표시 */}

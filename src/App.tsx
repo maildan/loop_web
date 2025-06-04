@@ -71,7 +71,7 @@ function App() {
     <ThemeProvider>
       <Router>
         <ScrollToTop />
-        <div className="min-h-screen bg-background text-foreground">
+        <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/cloud" element={<CloudPage />} />

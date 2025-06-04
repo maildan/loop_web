@@ -709,20 +709,43 @@ svg *:focus {
   overflow-x: hidden;
 }
 
-/* Prevent text wrapping for Korean compound words */
+/* Custom scrollbar for document list */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(203 213 225) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgb(203 213 225);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(148 163 184);
+}
+
+/* Dark mode scrollbar */
+.dark .scrollbar-thin {
+  scrollbar-color: rgb(71 85 105) transparent;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgb(71 85 105);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(100 116 139);
+}
+
+/* Fix for Google 문서 badge */
 .whitespace-nowrap {
-  white-space: nowrap;
-}
-
-/* Ensure responsive containers don't overflow */
-.p-8.pt-0 {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-/* Mobile sidebar improvements */
-@media (max-width: 768px) {
-  .mobile-nav-overlay {
-    backdrop-filter: blur(4px);
-  }
+  white-space: nowrap !important;
 }

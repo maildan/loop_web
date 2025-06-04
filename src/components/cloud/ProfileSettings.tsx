@@ -79,7 +79,7 @@ export function ProfileSettings() {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-6 pb-16">
+    <div className="bg-background pt-6 pb-16 overflow-x-hidden">
       <Container className="py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -87,7 +87,7 @@ export function ProfileSettings() {
               <Settings className="h-8 w-8 text-primary" />
               프로필 설정
             </h1>
-            <p className="text-muted-foreground mt-2">계정 정보와 환경 설정을 관리하세요</p>
+            <p className="text-muted-foreground mt-2">계정정보 및 환경설정</p>
           </div>
           <Badge variant="outline" className="flex items-center gap-2" size="lg">
             <User className="h-3 w-3" />
@@ -318,17 +318,19 @@ export function ProfileSettings() {
                   </div>
 
                   <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="space-y-1">
+                    <div className="space-y-1 flex-1 pr-4">
                       <h3 className="font-medium">마케팅 이메일</h3>
                       <p className="text-sm text-muted-foreground">
                         제품 업데이트, 팁 및 특별 혜택에 대한 이메일을 받습니다
                       </p>
                     </div>
-                    <ToggleSwitch 
-                      checked={marketingEmails}
-                      onChange={setMarketingEmails}
-                      id="marketing-toggle"
-                    />
+                    <div className="flex-shrink-0">
+                      <ToggleSwitch 
+                        checked={marketingEmails}
+                        onChange={setMarketingEmails}
+                        id="marketing-toggle"
+                      />
+                    </div>
                   </div>
                 </div>
               </CardContent>

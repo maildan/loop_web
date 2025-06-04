@@ -24,7 +24,7 @@ interface CardHeaderProps {
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ children, className = '' }) => {
   return (
-    <div className={`flex flex-col space-y-1.5 p-6 ${className}`}>
+    <div className={`flex flex-col space-y-1.5 p-1.5 md:p-6 ${className}`}>
       {children}
     </div>
   );
@@ -37,7 +37,7 @@ interface CardTitleProps {
 
 export const CardTitle: React.FC<CardTitleProps> = ({ children, className = '' }) => {
   return (
-    <h3 className={`text-2xl font-semibold leading-none tracking-tight ${className}`}>
+    <h3 className={`text-base md:text-xl font-semibold leading-none tracking-tight ${className}`}>
       {children}
     </h3>
   );
@@ -50,7 +50,7 @@ interface CardContentProps {
 
 export const CardContent: React.FC<CardContentProps> = ({ children, className = '' }) => {
   return (
-    <div className={`p-8 pt-0 overflow-hidden ${className}`}>
+    <div className={`p-1.5 pt-0 md:p-8 md:pt-0 overflow-hidden overflow-x-hidden ${className}`}>
       {children}
     </div>
   );

@@ -1,12 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, Suspense } from 'react';
 import { Container } from '../ui/Container';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/Tabs';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../ui/Table';
 import { Badge } from '../ui/Badge';
-import { DocumentSelector, Document } from './DocumentSelector';
-import { DocumentViewer } from './DocumentViewer';
+import { Document } from './DocumentSelector';
 import { MobileNav } from './MobileNav';
 import { useTheme } from '../ui/ThemeProvider';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -15,7 +14,6 @@ import {
   Clock, 
   TrendingUp, 
   Target,
-  Eye,
   Edit
 } from 'lucide-react';
 import {
@@ -32,6 +30,17 @@ import {
   Pie,
   Cell
 } from 'recharts';
+
+// Lazy loaded components for better performance
+const DocumentSelector = React.lazy(() => import('./DocumentSelector').then(module => ({ default: module.DocumentSelector })));
+const DocumentViewer = React.lazy(() => import('./DocumentViewer').then(module => ({ default: module.DocumentViewer })));
+
+// Loading component for Suspense
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center h-32">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
 
 // Mock data
 const mockDocuments: Document[] = [
@@ -112,7 +121,7 @@ export function CloudDashboard() {
   }, [location.search]);
 
   // 탭 변경 시 URL 업데이트 및 히스토리에 추가
-  const handleTabChange = (newTab: string) => {
+  const handleTabChange = useCallback((newTab: string) => {
     setActiveTab(newTab);
     
     // 탭 히스토리 업데이트
@@ -135,7 +144,7 @@ export function CloudDashboard() {
     
     const newUrl = `/cloud?tab=${newTab}`;
     navigate(newUrl, { replace: false }); // 히스토리에 새 항목 추가
-  };
+  }, [navigate]);
 
   // 브라우저 뒤로가기 처리
   useEffect(() => {
@@ -206,15 +215,15 @@ export function CloudDashboard() {
   }, [isDarkMode]);
 
   return (
-    <div className="min-h-screen bg-background pt-6 pb-16">
-      <Container className="py-8">
+    <div className="bg-background pt-6 pb-16 overflow-hidden">
+      <Container className="py-8 h-full">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-4">
+            <div className="flex md:hidden items-center -mt-2">
+              <MobileNav activeSection={activeTab} onSectionChange={handleTabChange} />
+            </div>
             <h1 className="text-2xl font-bold">대시보드</h1>
             <Badge variant="secondary">Beta</Badge>
-          </div>
-          <div className="flex md:hidden items-center">
-            <MobileNav activeSection={activeTab} onSectionChange={handleTabChange} />
           </div>
         </div>
 
@@ -443,17 +452,6 @@ export function CloudDashboard() {
                           <div className="flex space-x-2">
                             <Button 
                               variant="ghost" 
-                              size="sm" 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedDocument(doc);
-                                setActiveTab('documents');
-                              }}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button 
-                              variant="ghost" 
                               size="sm"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -616,30 +614,33 @@ export function CloudDashboard() {
               </Card>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
-              <div className="lg:col-span-1">
+            <div className="grid gap-6 lg:grid-cols-3 overflow-x-hidden">
+              <div className="lg:col-span-1 min-w-0 overflow-x-hidden">
               <Card>
                 <CardHeader>
                 <CardTitle>문서 목록</CardTitle>
                 </CardHeader>
-                <CardContent>
-                <DocumentSelector
-                  documents={mockDocuments}
-                  selectedDocument={selectedDocument}
-                  onDocumentSelect={setSelectedDocument}
-                />
+                <CardContent className="overflow-x-hidden">
+                <Suspense fallback={<LoadingSpinner />}>
+                  <DocumentSelector
+                    documents={mockDocuments}
+                    selectedDocument={selectedDocument}
+                    onDocumentSelect={setSelectedDocument}
+                  />
+                </Suspense>
                 </CardContent>
               </Card>
               </div>
 
-              <div className="lg:col-span-2">
-              {selectedDocument ? (
-                <DocumentViewer document={selectedDocument} />
+              <div className="lg:col-span-2 min-w-0 overflow-x-hidden">{selectedDocument ? (
+                <Suspense fallback={<LoadingSpinner />}>
+                  <DocumentViewer document={selectedDocument} />
+                </Suspense>
               ) : (
                 <Card>
                 <CardContent className="flex flex-col items-center justify-center h-96 text-center p-6">
                   <FileText className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="font-medium mb-2 text-lg">문서를 선택하세요</h3>
+                  <h3 className="font-medium mb-2 text-lg hidden lg:block">문서를 선택하세요</h3>
                   <p className="text-muted-foreground">
                   왼쪽에서 문서를 선택하면 상세 정보가 표시됩니다.
                   </p>

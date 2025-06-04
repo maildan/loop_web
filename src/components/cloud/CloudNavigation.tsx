@@ -19,28 +19,75 @@ export function CloudNavigation() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <Container>
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+        {/* Mobile Layout */}
+        <div className="md:hidden">
+          {/* Top row: Logo, hamburger menu and essential controls */}
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Link to="/cloud" className="flex items-center">
+                <span className="font-bold text-xl">Loop</span>
+              </Link>
+            </div>
+            
+            <div className="flex items-center space-x-1">
+              <Link to="/">
+                <Button variant="ghost" size="sm" className="p-2">
+                  <Home className="h-4 w-4" />
+                </Button>
+              </Link>
+              
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="p-2"
+                onClick={toggleTheme}
+                aria-label={isDarkMode ? '라이트 모드로 전환' : '다크 모드로 전환'}
+              >
+                {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <Avatar 
+                    src="https://randomuser.me/api/portraits/men/21.jpg" 
+                    alt="사용자 프로필"
+                    size="sm"
+                    fallback="사용자"
+                    className="cursor-pointer"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => window.location.href = "/profile"}>
+                    <User className="h-4 w-4 mr-2" />
+                    프로필 설정
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => window.location.href = "/account"}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    계정 관리
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => logout()}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    로그아웃
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden md:flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link to="/cloud" className="flex items-center">
-              <span className="font-bold text-2xl hidden md:block">Loop Cloud</span>
-              <span className="font-bold text-2xl md:hidden">Loop</span>
+              <span className="font-bold text-2xl">Loop Cloud</span>
             </Link>
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <Link to="/" className="hidden sm:block">
+          <div className="flex items-center space-x-4">
+            <Link to="/">
               <Button variant="ghost" size="sm">
                 <Home className="h-5 w-5 mr-2" />
                 홈으로
-              </Button>
-            </Link>
-            
-            {/* Mobile Home Button - Icon Only */}
-            <Link to="/" className="sm:hidden">
-              <Button variant="ghost" size="sm">
-                <Home className="h-5 w-5" />
               </Button>
             </Link>
             
@@ -56,7 +103,7 @@ export function CloudNavigation() {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="flex items-center space-x-2 cursor-pointer">
-                  <span className="text-sm text-muted-foreground hidden sm:block">사용자님</span>
+                  <span className="text-sm text-muted-foreground">사용자님</span>
                   <Avatar 
                     src="https://randomuser.me/api/portraits/men/21.jpg" 
                     alt="사용자 프로필"
