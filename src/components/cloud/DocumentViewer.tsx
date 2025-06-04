@@ -1,33 +1,187 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Share, Download, Edit, Copy, FileText, Clock, TrendingUp } from 'lucide-react';
+import { Badge } from '../ui/Badge';
+import { useTheme } from '../ui/ThemeProvider';
+import { Share, Download, Edit, Copy } from 'lucide-react';
 import { Document } from './DocumentSelector';
+import { 
+  ResponsiveContainer, 
+  PieChart, 
+  Pie, 
+  Cell,
+  Tooltip
+} from 'recharts';
 
 interface DocumentViewerProps {
   document: Document;
 }
 
 export function DocumentViewer({ document }: DocumentViewerProps) {
+  const { isDarkMode } = useTheme();
+  const [copyStatus, setCopyStatus] = useState<string | null>(null);
+  
+  // 문서 세그먼트 분석 - 고정 데이터 (서론 20%, 본론 60%, 결론 20%)
+  const documentSegments = useMemo(() => [
+    { name: '서론', value: 20 },
+    { name: '본론', value: 60 },
+    { name: '결론', value: 20 },
+  ], []);
+
+  // 복사 기능 구현 (Clipboard API와 fallback 방식 지원)
+  const handleCopy = async (text: string) => {
+    try {
+      // 현대적인 Clipboard API 시도
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        setCopyStatus('복사되었습니다!');
+        setTimeout(() => setCopyStatus(null), 2000);
+        return;
+      }
+      
+      // Fallback: execCommand 방식
+      const textArea = window.document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      window.document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      const successful = window.document.execCommand('copy');
+      window.document.body.removeChild(textArea);
+      
+      if (successful) {
+        setCopyStatus('복사되었습니다!');
+      } else {
+        setCopyStatus('복사 실패');
+      }
+      setTimeout(() => setCopyStatus(null), 2000);
+      
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+      setCopyStatus('복사 실패');
+      setTimeout(() => setCopyStatus(null), 2000);
+    }
+  };
+
+  // 앱 유형에 따른 스타일 및 레이블 
+  const getAppTypeInfo = (type: string) => {
+    switch (type) {
+      case 'google-docs':
+        return { 
+          label: 'Google Docs', 
+          icon: '📄', 
+          variant: 'default',
+          color: '#4285F4' 
+        };
+      case 'notion':
+        return { 
+          label: 'Notion', 
+          icon: '📝', 
+          variant: 'outline',
+          color: '#000000' 
+        };
+      case 'slack':
+        return { 
+          label: 'Slack', 
+          icon: '💬', 
+          variant: 'secondary',
+          color: '#4A154B' 
+        };
+      default:
+        return { 
+          label: '기타', 
+          icon: '📋', 
+          variant: 'destructive',
+          color: '#6B7280' 
+        };
+    }
+  };
+
   // 문서 유형에 따른 가상 내용 생성
   const generateDocumentContent = (doc: Document) => {
     switch(doc.type) {
       case 'google-docs':
-        return `# ${doc.name}\n\n## 개요\n\nLoop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 통합하여 효율적인 업무 환경을 제공합니다.\n\n## 주요 기능\n\n1. 메신저 통합\n2. 클라우드 저장소 연동\n3. 작업 관리 도구\n4. 일정 관리\n\n## 목표 및 전략\n\n* 사용자 경험 개선\n* 기능 확장\n* 시장 점유율 증가\n* 글로벌 시장 진출`;
+        return `# ${doc.name}
+
+## 개요
+
+Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 통합하여 효율적인 업무 환경을 제공합니다.
+
+## 주요 기능
+
+1. 메신저 통합
+2. 클라우드 저장소 연동
+3. 작업 관리 도구
+4. 일정 관리
+
+## 목표 및 전략
+
+* 사용자 경험 개선
+* 기능 확장
+* 시장 점유율 증가
+* 글로벌 시장 진출`;
       case 'notion':
-        return `# ${doc.name}\n\n**팀원들과 공유할 내용:**\n\n- [ ] 개발 로드맵 검토\n- [ ] 사용자 피드백 분석\n- [ ] 다음 버전 기능 계획\n\n> 중요: 다음 미팅 전까지 완료해주세요!\n\n## 개발 일정\n\n| 항목 | 담당자 | 마감일 |\n| --- | --- | --- |\n| UI 개선 | 디자인팀 | 6월 10일 |\n| 백엔드 API | 서버팀 | 6월 15일 |\n| 테스트 | QA팀 | 6월 20일 |`;
+        return `# ${doc.name}
+
+**팀원들과 공유할 내용:**
+
+- [ ] 개발 로드맵 검토
+- [ ] 사용자 피드백 분석
+- [ ] 다음 버전 기능 계획
+
+> 중요: 다음 미팅 전까지 완료해주세요!
+
+## 개발 일정
+
+| 항목 | 담당자 | 마감일 |
+| --- | --- | --- |
+| UI 개선 | 디자인팀 | 6월 10일 |
+| 백엔드 API | 서버팀 | 6월 15일 |
+| 테스트 | QA팀 | 6월 20일 |`;
       case 'slack':
-        return `# ${doc.name}\n\n**@개발팀** 오늘 진행된 회의 내용 공유드립니다.\n\n@사용자1: 지난번 피드백 반영 상황은 어떤가요?\n@사용자2: UI 부분은 80% 완료되었고, 백엔드 연동 작업 진행 중입니다.\n@사용자3: 테스트 계획은 언제쯤 공유되나요?\n@사용자1: 이번 주 금요일까지 공유하겠습니다.\n\n**결정사항:**\n1. 다음 릴리스는 6월 말로 연기\n2. 베타 테스트 2주간 진행\n3. 우선순위 기능: 알림 개선, 동기화 속도 향상`;
+        return `# ${doc.name}
+
+**@개발팀** 오늘 진행된 회의 내용 공유드립니다.
+
+@사용자1: 지난번 피드백 반영 상황은 어떤가요?
+@사용자2: UI 부분은 80% 완료되었고, 백엔드 연동 작업 진행 중입니다.
+@사용자3: 테스트 계획은 언제쯤 공유되나요?
+@사용자1: 이번 주 금요일까지 공유하겠습니다.
+
+**결정사항:**
+1. 다음 릴리스는 6월 말로 연기
+2. 베타 테스트 2주간 진행
+3. 우선순위 기능: 알림 개선, 동기화 속도 향상`;
       default:
-        return `# ${doc.name}\n\n이 문서는 Loop 플랫폼에서 생성된 ${doc.type} 유형의 문서입니다.\n\n총 ${doc.wordCount}자로 구성되어 있으며, 읽는데 약 ${doc.readingTime}분이 소요됩니다.\n\n최종 수정일: ${doc.lastModified.toLocaleDateString('ko-KR')}`;
+        return `# ${doc.name}
+
+이 문서는 Loop 플랫폼에서 생성된 ${doc.type} 유형의 문서입니다.
+
+총 ${doc.wordCount}자로 구성되어 있으며, 읽는데 약 ${doc.readingTime}분이 소요됩니다.
+
+최종 수정일: ${doc.lastModified.toLocaleDateString('ko-KR')}`;
     }
   };
+
+  const appType = getAppTypeInfo(document.type);
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle>{document.name}</CardTitle>
+          <div className="flex items-center space-x-3">
+            <CardTitle>{document.name}</CardTitle>
+            <Badge 
+              variant={appType.variant as any} 
+              className="ml-2"
+              size="lg"
+            >
+              {appType.icon} {appType.label}
+            </Badge>
+          </div>
           <div className="flex space-x-2">
             <Button variant="outline" size="sm">
               <Share className="h-4 w-4 mr-2" />
@@ -62,13 +216,268 @@ export function DocumentViewer({ document }: DocumentViewerProps) {
           </div>
         </div>
 
+        {/* 문서 세그먼트 분석 차트들 */}
+        <div className="grid gap-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 mb-6">
+          {/* 1. 문서 구성 분석 차트 */}
+          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden document-composition-chart">
+            <h3 className="chart-title font-medium mb-4 text-center text-sm">문서 구성 분석</h3>
+            
+            {/* 모바일에서는 텍스트 기반 구성 표시 */}
+            <div className="block md:hidden">
+              <div className="space-y-3">
+                {documentSegments.map((segment, index) => (
+                  <div key={segment.name} className="flex items-center justify-between p-3 bg-accent rounded-lg">
+                    <span className="font-medium">{segment.name}</span>
+                    <span className="text-lg font-bold">{segment.value}%</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* 데스크톱에서는 원형 그래프 표시 */}
+            <div className="hidden md:flex justify-center" style={{ width: '100%', height: '220px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={documentSegments}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={25}
+                    outerRadius={65}
+                    paddingAngle={3}
+                    dataKey="value"
+                    labelLine={false}
+                    startAngle={90}
+                    endAngle={450}
+                    isAnimationActive={false}
+                  >
+                    {documentSegments.map((entry, index) => {
+                      const colors = [
+                        isDarkMode ? '#4285F4' : '#1a73e8',  // 서론
+                        isDarkMode ? '#34A853' : '#0f7b0f',  // 본론  
+                        isDarkMode ? '#FBBC05' : '#e37400',  // 결론
+                      ];
+                      return (
+                        <Cell 
+                          key={`segment-cell-${index}`} 
+                          fill={colors[index]} 
+                          stroke={isDarkMode ? '#333' : '#1e293b'}
+                          strokeWidth={isDarkMode ? 2 : 3}
+                        />
+                      );
+                    })}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)', 
+                      border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)'}`, 
+                      borderRadius: '8px',
+                      boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.6)' : '0 4px 16px rgba(0, 0, 0, 0.12)',
+                      color: isDarkMode ? '#ffffff' : '#1e293b'
+                    }}
+                    labelStyle={{ 
+                      color: isDarkMode ? '#ffffff' : '#1e293b', 
+                      fontWeight: '600' 
+                    }}
+                    itemStyle={{ 
+                      color: isDarkMode ? '#e2e8f0' : '#334155' 
+                    }}
+                    formatter={(value: any, name: any) => [`${value}%`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* 2. 텍스트 밀도 분석 차트 */}
+          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden text-density-chart">
+            <h3 className="chart-title font-medium mb-4 text-center text-sm">텍스트 밀도</h3>
+            
+            {/* 모바일에서는 텍스트 기반 구성 표시 */}
+            <div className="block md:hidden">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-accent rounded-lg">
+                  <span className="font-medium">높음</span>
+                  <span className="text-lg font-bold">40%</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-accent rounded-lg">
+                  <span className="font-medium">보통</span>
+                  <span className="text-lg font-bold">45%</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-accent rounded-lg">
+                  <span className="font-medium">낮음</span>
+                  <span className="text-lg font-bold">15%</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* 데스크톱에서는 원형 그래프 표시 */}
+            <div className="hidden md:flex justify-center" style={{ width: '100%', height: '220px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: '높음', value: 40 },
+                      { name: '보통', value: 45 },
+                      { name: '낮음', value: 15 },
+                    ]}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={25}
+                    outerRadius={65}
+                    paddingAngle={3}
+                    dataKey="value"
+                    labelLine={false}
+                    startAngle={90}
+                    endAngle={450}
+                    isAnimationActive={false}
+                  >
+                    {[
+                      { name: '높음', value: 40 },
+                      { name: '보통', value: 45 },
+                      { name: '낮음', value: 15 },
+                    ].map((entry, index) => {
+                      const colors = [
+                        isDarkMode ? '#FF6B6B' : '#e74c3c',  // 높음
+                        isDarkMode ? '#4ECDC4' : '#16a085',  // 보통  
+                        isDarkMode ? '#45B7D1' : '#3498db',  // 낮음
+                      ];
+                      return (
+                        <Cell 
+                          key={`density-cell-${index}`} 
+                          fill={colors[index]} 
+                          stroke={isDarkMode ? '#333' : '#1e293b'}
+                          strokeWidth={isDarkMode ? 2 : 3}
+                        />
+                      );
+                    })}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)', 
+                      border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)'}`, 
+                      borderRadius: '8px',
+                      boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.6)' : '0 4px 16px rgba(0, 0, 0, 0.12)',
+                      color: isDarkMode ? '#ffffff' : '#1e293b'
+                    }}
+                    labelStyle={{ 
+                      color: isDarkMode ? '#ffffff' : '#1e293b', 
+                      fontWeight: '600' 
+                    }}
+                    itemStyle={{ 
+                      color: isDarkMode ? '#e2e8f0' : '#334155' 
+                    }}
+                    formatter={(value: any, name: any) => [`${value}%`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* 3. 가독성 점수 차트 */}
+          <div className="border rounded-lg p-8 pt-0 bg-card min-h-[300px] overflow-hidden readability-score-chart">
+            <h3 className="chart-title font-medium mb-4 text-center text-sm">가독성 점수</h3>
+            
+            {/* 모바일에서는 텍스트 기반 구성 표시 */}
+            <div className="block md:hidden">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-accent rounded-lg">
+                  <span className="font-medium">우수</span>
+                  <span className="text-lg font-bold">35%</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-accent rounded-lg">
+                  <span className="font-medium">양호</span>
+                  <span className="text-lg font-bold">40%</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-accent rounded-lg">
+                  <span className="font-medium">보통</span>
+                  <span className="text-lg font-bold">25%</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* 데스크톱에서는 원형 그래프 표시 */}
+            <div className="hidden md:flex justify-center" style={{ width: '100%', height: '220px' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={[
+                      { name: '우수', value: 65 },
+                      { name: '보통', value: 25 },
+                      { name: '개선필요', value: 10 },
+                    ]}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={25}
+                    outerRadius={65}
+                    paddingAngle={3}
+                    dataKey="value"
+                    labelLine={false}
+                    startAngle={90}
+                    endAngle={450}
+                    isAnimationActive={false}
+                  >
+                    {[
+                      { name: '우수', value: 65 },
+                      { name: '보통', value: 25 },
+                      { name: '개선필요', value: 10 },
+                    ].map((entry, index) => {
+                      const colors = [
+                        isDarkMode ? '#2ECC71' : '#27ae60',  // 우수
+                        isDarkMode ? '#F39C12' : '#f39c12',  // 보통  
+                        isDarkMode ? '#E74C3C' : '#c0392b',  // 개선필요
+                      ];
+                      return (
+                        <Cell 
+                          key={`readability-cell-${index}`} 
+                          fill={colors[index]} 
+                          stroke={isDarkMode ? '#333' : '#1e293b'}
+                          strokeWidth={isDarkMode ? 2 : 3}
+                        />
+                      );
+                    })}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)', 
+                      border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)'}`, 
+                      borderRadius: '8px',
+                      boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.6)' : '0 4px 16px rgba(0, 0, 0, 0.12)',
+                      color: isDarkMode ? '#ffffff' : '#1e293b'
+                    }}
+                    labelStyle={{ 
+                      color: isDarkMode ? '#ffffff' : '#1e293b', 
+                      fontWeight: '600' 
+                    }}
+                    itemStyle={{ 
+                      color: isDarkMode ? '#e2e8f0' : '#334155' 
+                    }}
+                    formatter={(value: any, name: any) => [`${value}%`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
         <div className="border rounded-lg p-6 bg-card">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-medium">문서 내용</h3>
-            <Button variant="ghost" size="sm">
-              <Copy className="h-4 w-4 mr-2" />
-              복사
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => handleCopy(generateDocumentContent(document))}
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                복사
+              </Button>
+              {copyStatus && (
+                <span className="text-sm text-green-600 font-medium">
+                  {copyStatus}
+                </span>
+              )}
+            </div>
           </div>
           <div className="prose max-w-none">
             {generateDocumentContent(document).split('\n').map((line, index) => {

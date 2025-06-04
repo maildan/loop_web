@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Container } from '../ui/Container';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from '../ui/ThemeProvider';
+import { Sun, Moon } from 'lucide-react';
 
 interface NavigationProps {
   children?: React.ReactNode;
@@ -10,6 +11,7 @@ interface NavigationProps {
 export const Navigation: React.FC<NavigationProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
+  const location = useLocation();
 
   const navItems = [
     { href: '/', label: '홈', id: 'nav-home' },
@@ -32,32 +34,52 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              item.href.startsWith('/') ? (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-                >
-                  {item.label}
-                </a>
-              )
-            ))}
+            {navItems.map((item) => {
+              // Check if the link is a hash link (anchor) on the current page
+              const isHashLink = item.href.includes('#') && item.href.startsWith('/');
+              
+              if (isHashLink && location.pathname === '/') {
+                // For hash links on the homepage
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                );
+              } else if (item.href.startsWith('/') && !isHashLink) {
+                // For regular internal routes
+                return (
+                  <Link
+                    key={item.id}
+                    to={item.href}
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                );
+              } else {
+                // For external links or fallback
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                );
+              }
+            })}
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
               aria-label="다크모드 토글"
             >
-              {isDarkMode ? '🌞' : '🌙'}
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
           </div>
 
@@ -68,7 +90,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
               className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
               aria-label="다크모드 토글"
             >
-              {isDarkMode ? '🌞' : '🌙'}
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
             <button
               className="flex flex-col space-y-1"
@@ -98,27 +120,48 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
         {isMenuOpen && (
           <div className="md:hidden border-t border-border/40 py-4">
             <div className="flex flex-col space-y-3">
-              {navItems.map((item) => (
-                item.href.startsWith('/') ? (
-                  <Link
-                    key={item.id}
-                    to={item.href}
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={item.id}
-                    href={item.href}
-                    className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.label}
-                  </a>
-                )
-              ))}
+              {navItems.map((item) => {
+                // Check if the link is a hash link (anchor) on the current page
+                const isHashLink = item.href.includes('#') && item.href.startsWith('/');
+                
+                if (isHashLink && location.pathname === '/') {
+                  // For hash links on the homepage
+                  return (
+                    <Link
+                      key={item.id}
+                      to={item.href}
+                      className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                } else if (item.href.startsWith('/') && !isHashLink) {
+                  // For regular internal routes
+                  return (
+                    <Link
+                      key={item.id}
+                      to={item.href}
+                      className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                } else {
+                  // For external links or fallback
+                  return (
+                    <a
+                      key={item.id}
+                      href={item.href}
+                      className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </a>
+                  );
+                }
+              })}
             </div>
           </div>
         )}

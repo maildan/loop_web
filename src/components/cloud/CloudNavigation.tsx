@@ -5,6 +5,7 @@ import { Button } from '../ui/Button';
 import { Sun, Moon, Home, User, Settings, LogOut } from 'lucide-react';
 import { Avatar } from '../ui/Avatar';
 import { useTheme } from '../ui/ThemeProvider';
+import { logout } from '../../services/auth';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -22,16 +23,24 @@ export function CloudNavigation() {
           {/* Logo */}
           <div className="flex items-center space-x-4">
             <Link to="/cloud" className="flex items-center">
-              <span className="font-bold text-2xl">Loop Cloud</span>
+              <span className="font-bold text-2xl hidden md:block">Loop Cloud</span>
+              <span className="font-bold text-2xl md:hidden">Loop</span>
             </Link>
           </div>
 
           {/* Controls */}
-          <div className="flex items-center space-x-4">
-            <Link to="/">
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <Link to="/" className="hidden sm:block">
               <Button variant="ghost" size="sm">
                 <Home className="h-5 w-5 mr-2" />
                 홈으로
+              </Button>
+            </Link>
+            
+            {/* Mobile Home Button - Icon Only */}
+            <Link to="/" className="sm:hidden">
+              <Button variant="ghost" size="sm">
+                <Home className="h-5 w-5" />
               </Button>
             </Link>
             
@@ -47,7 +56,7 @@ export function CloudNavigation() {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="flex items-center space-x-2 cursor-pointer">
-                  <span className="text-sm text-muted-foreground">사용자님</span>
+                  <span className="text-sm text-muted-foreground hidden sm:block">사용자님</span>
                   <Avatar 
                     src="https://randomuser.me/api/portraits/men/21.jpg" 
                     alt="사용자 프로필"
@@ -65,7 +74,7 @@ export function CloudNavigation() {
                   <Settings className="h-4 w-4 mr-2" />
                   계정 관리
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => console.log('로그아웃')}>
+                <DropdownMenuItem onClick={() => logout()}>
                   <LogOut className="h-4 w-4 mr-2" />
                   로그아웃
                 </DropdownMenuItem>

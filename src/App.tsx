@@ -11,7 +11,10 @@ import {
   CloudNavigation,
   ThemeProvider,
   ProfileSettings,
-  AccountManagement
+  AccountManagement,
+  ScrollToTop,
+  LoginPage,
+  RegisterPage
 } from './components';
 
 // Main Landing Page Component
@@ -67,12 +70,15 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
+        <ScrollToTop />
         <div className="min-h-screen bg-background text-foreground">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/cloud" element={<CloudPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/account" element={<AccountPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </div>
       </Router>

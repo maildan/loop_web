@@ -6,8 +6,8 @@ export const Footer: React.FC = () => {
 
   const footerLinks = {
     product: [
-      { label: 'Loop Pro', href: '#download' },
-      { label: 'Loop Novel', href: '#download' },
+      { label: 'Loop Pro', href: '#download-pro' },
+      { label: 'Loop Novel', href: '#download-novel' },
       { label: '기능', href: '#about' },
       { label: '플랫폼 지원', href: '#services' },
     ],

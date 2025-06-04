@@ -25,17 +25,36 @@ interface SheetTitleProps {
   children: React.ReactNode;
 }
 
+interface SheetContextValue {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const SheetContext = React.createContext<SheetContextValue | undefined>(undefined);
+
+const useSheet = () => {
+  const context = React.useContext(SheetContext);
+  if (!context) {
+    throw new Error('useSheet must be used within a Sheet');
+  }
+  return context;
+};
+
 export const Sheet: React.FC<SheetProps> = ({ open, onOpenChange, children }) => {
   return (
-    <div className={open ? 'relative' : 'relative'}>
-      {children}
-      {open && (
-        <div 
-          className="fixed inset-0 bg-black/50 z-40"
-          onClick={() => onOpenChange(false)}
-        />
-      )}
-    </div>
+    <SheetContext.Provider value={{ open, onOpenChange }}>
+      <div className="relative">
+        {children}
+        {open && (
+          <>
+            <div 
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden mobile-nav-overlay"
+              onClick={() => onOpenChange(false)}
+            />
+          </>
+        )}
+      </div>
+    </SheetContext.Provider>
   );
 };
 
@@ -44,8 +63,14 @@ export const SheetTrigger: React.FC<SheetTriggerProps> = ({ children }) => {
 };
 
 export const SheetContent: React.FC<SheetContentProps> = ({ side, className = '', children }) => {
+  const { open } = useSheet();
+  
+  if (!open) return null;
+  
   return (
-    <div className={`fixed ${side === 'left' ? 'left-0' : 'right-0'} top-0 h-full bg-background border-r z-50 ${className}`}>
+    <div className={`fixed ${side === 'left' ? 'left-0' : 'right-0'} top-0 h-full bg-background border-r z-50 transform transition-transform duration-300 ease-in-out ${
+      open ? 'translate-x-0' : side === 'left' ? '-translate-x-full' : 'translate-x-full'
+    } ${className}`}>
       {children}
     </div>
   );

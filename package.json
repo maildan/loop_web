@@ -1,7 +1,9 @@
 {
   "name": "loop_3_web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
+  "homepage": "/",
+  "proxy": "http://172.28.13.93:3001/",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/DropdownMenu';
 import { ChevronDown, FileText, Folder, Clock, TrendingUp, Eye } from 'lucide-react';
 
@@ -45,7 +46,7 @@ export function DocumentSelector({
   const getTypeLabel = (type: string) => {
     switch (type) {
       case 'google-docs':
-        return 'Google Docs';
+        return 'Google 문서';
       case 'notion':
         return 'Notion';
       case 'slack':
@@ -58,7 +59,7 @@ export function DocumentSelector({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">문서 선택</h2>
+        <h2 className="text-lg font-semibold">문서 필터</h2>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm">
@@ -71,7 +72,7 @@ export function DocumentSelector({
               전체
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setFilterType('google-docs')}>
-              Google Docs
+              <span className="whitespace-nowrap">Google 문서</span>
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setFilterType('notion')}>
               Notion
@@ -83,7 +84,7 @@ export function DocumentSelector({
         </DropdownMenu>
       </div>
 
-      <div className="space-y-2 max-h-96 overflow-y-auto">
+      <div className="space-y-2 max-h-80 overflow-y-auto pr-2 scrollbar-thin">
         {filteredDocuments.map((document) => (
           <div
             key={document.id}
@@ -94,13 +95,24 @@ export function DocumentSelector({
             }`}
             onClick={() => onDocumentSelect(document)}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start space-x-3">
-                <span className="text-xl">{getTypeIcon(document.type)}</span>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start space-x-3 flex-1 min-w-0">
+                <span className="text-xl flex-shrink-0">{getTypeIcon(document.type)}</span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm truncate">
-                    {document.name}
-                  </h3>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium text-sm truncate flex-1">
+                      {document.name}
+                    </h3>
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs flex-shrink-0 ${
+                        document.type === 'google-docs' ? 'px-3 py-1 min-w-[90px]' : 'px-2 py-1'
+                      }`}
+                      size="sm"
+                    >
+                      <span className="whitespace-nowrap">{getTypeLabel(document.type)}</span>
+                    </Badge>
+                  </div>
                   <div className="flex items-center space-x-4 mt-1 text-xs text-muted-foreground">
                     <span className="flex items-center">
                       <Clock className="w-3 h-3 mr-1" />
@@ -120,7 +132,7 @@ export function DocumentSelector({
               <Button 
                 variant="ghost" 
                 size="sm"
-                className="ml-2 shrink-0"
+                className="ml-4 shrink-0"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDocumentSelect(document);

@@ -25,14 +25,19 @@ export function MobileNav({ activeSection = 'overview', onSectionChange }: Mobil
   };
 
   return (
-    <div className="md:hidden">
+    <div className="block md:hidden">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
-          <Button variant="ghost" size="sm">
-            <Menu className="h-5 w-5" />
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="p-2 hover:bg-accent focus:ring-2 focus:ring-primary transition-all duration-200"
+          >
+            <Menu className={`h-5 w-5 transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
+            <span className="sr-only">메뉴 열기</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-72">
+        <SheetContent side="left" className="w-72 md:hidden">
           <SheetHeader>
             <SheetTitle>Loop Cloud</SheetTitle>
           </SheetHeader>

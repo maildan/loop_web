@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -21,6 +21,8 @@ interface ThemeProviderProps {
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const lastToggleTime = useRef(0);
+  const cooldownPeriod = 1000; // 1 second cooldown
 
   useEffect(() => {
     // 초기 다크모드 상태 확인 및 적용
@@ -66,6 +68,15 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, []);
 
   const toggleTheme = () => {
+    const currentTime = Date.now();
+    
+    // 쿨다운 체크
+    if (currentTime - lastToggleTime.current < cooldownPeriod) {
+      return; // 쿨다운 중이면 토글 무시
+    }
+    
+    lastToggleTime.current = currentTime;
+    
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
     
