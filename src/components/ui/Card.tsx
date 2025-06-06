@@ -4,13 +4,19 @@ interface CardProps {
   children: React.ReactNode;
   className?: string;
   onClick?: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  style?: React.CSSProperties;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className = '', onClick }) => {
+export const Card: React.FC<CardProps> = ({ children, className = '', onClick, onMouseEnter, onMouseLeave, style }) => {
   return (
     <div 
       className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className} ${onClick ? 'cursor-pointer' : ''}`}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={style}
     >
       {children}
     </div>

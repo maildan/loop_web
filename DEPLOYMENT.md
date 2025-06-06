@@ -1,4 +1,4 @@
-# Loop Dashboard 배포 가이드
+# Loop Dashboard 배포 가이드 (CloudFlare CDN 포함)
 
 ## 🚀 빠른 시작
 
@@ -16,11 +16,49 @@ yarn start:dev
 # 프로덕션 빌드 생성
 yarn build
 
+# CloudFlare CDN 최적화 빌드
+yarn build:cdn
+
 # 프로덕션 서버 시작
 yarn serve
 
 # 빌드 + 서버 시작을 한 번에
 yarn prod
+```
+
+## 🌐 CloudFlare CDN 배포
+
+### 1. CloudFlare 계정 설정
+```bash
+# CloudFlare 계정 생성 후 도메인 추가
+# https://dash.cloudflare.com/
+
+# 환경 설정 파일 생성
+cp .env.cloudflare.example .env.cloudflare
+
+# API 토큰과 Zone ID 입력
+vi .env.cloudflare
+```
+
+### 2. 자동 CDN 설정
+```bash
+# CloudFlare CDN 자동 설정
+yarn cloudflare:setup
+
+# DNS 레코드만 설정
+yarn cloudflare:dns
+
+# 캐시 규칙만 설정  
+yarn cloudflare:cache
+```
+
+### 3. CDN 최적화 배포
+```bash
+# CDN 최적화 빌드 + 캐시 무효화
+yarn deploy:cdn
+
+# 수동 캐시 무효화
+yarn cloudflare:purge
 ```
 
 ## 🌐 도메인 배포

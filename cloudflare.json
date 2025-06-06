@@ -1,0 +1,120 @@
+{
+  "zone_id": "",
+  "api_token": "",
+  "dns_records": [
+    {
+      "type": "A",
+      "name": "cloop.kro.kr",
+      "content": "YOUR_SERVER_IP",
+      "ttl": 300,
+      "proxied": true
+    },
+    {
+      "type": "A", 
+      "name": "www.cloop.kro.kr",
+      "content": "YOUR_SERVER_IP",
+      "ttl": 300,
+      "proxied": true
+    },
+    {
+      "type": "CNAME",
+      "name": "api",
+      "content": "cloop.kro.kr",
+      "ttl": 300,
+      "proxied": true
+    }
+  ],
+  "page_rules": [
+    {
+      "targets": [
+        {
+          "target": "url",
+          "constraint": {
+            "operator": "matches",
+            "value": "cloop.kro.kr/static/*"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "id": "cache_level",
+          "value": "cache_everything"
+        },
+        {
+          "id": "edge_cache_ttl",
+          "value": 31536000
+        }
+      ],
+      "priority": 1,
+      "status": "active"
+    },
+    {
+      "targets": [
+        {
+          "target": "url",
+          "constraint": {
+            "operator": "matches", 
+            "value": "cloop.kro.kr/*.js"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "id": "cache_level",
+          "value": "cache_everything"
+        },
+        {
+          "id": "edge_cache_ttl",
+          "value": 2592000
+        }
+      ],
+      "priority": 2,
+      "status": "active"
+    },
+    {
+      "targets": [
+        {
+          "target": "url",
+          "constraint": {
+            "operator": "matches",
+            "value": "cloop.kro.kr/*.css"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "id": "cache_level",
+          "value": "cache_everything"
+        },
+        {
+          "id": "edge_cache_ttl",
+          "value": 2592000
+        }
+      ],
+      "priority": 3,
+      "status": "active"
+    }
+  ],
+  "security_settings": {
+    "security_level": "medium",
+    "ssl": "flexible",
+    "always_use_https": true,
+    "min_tls_version": "1.2",
+    "automatic_https_rewrites": true,
+    "opportunistic_encryption": true
+  },
+  "performance_settings": {
+    "minify": {
+      "html": true,
+      "css": true,
+      "js": true
+    },
+    "brotli": true,
+    "early_hints": true,
+    "rocket_loader": false,
+    "mirage": true,
+    "polish": "lossy",
+    "webp": true,
+    "image_resizing": true
+  }
+}

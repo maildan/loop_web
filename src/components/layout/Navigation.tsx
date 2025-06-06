@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container } from '../ui/Container';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../ui/ThemeProvider';
 import { Sun, Moon } from 'lucide-react';
 
@@ -12,6 +12,13 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isDarkMode, toggleTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleCloudClick = () => {
+    // 홈에서 클라우드로 이동하는 것을 표시
+    sessionStorage.setItem('previousPath', '/');
+    navigate('/cloud');
+  };
 
   const navItems = [
     { href: '/', label: '홈', id: 'nav-home' },
@@ -37,6 +44,19 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
             {navItems.map((item) => {
               // Check if the link is a hash link (anchor) on the current page
               const isHashLink = item.href.includes('#') && item.href.startsWith('/');
+              
+              // Special handling for cloud link
+              if (item.href === '/cloud') {
+                return (
+                  <button
+                    key={item.id}
+                    onClick={handleCloudClick}
+                    className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors bg-transparent border-none cursor-pointer"
+                  >
+                    {item.label}
+                  </button>
+                );
+              }
               
               if (isHashLink && location.pathname === '/') {
                 // For hash links on the homepage
@@ -123,6 +143,22 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
               {navItems.map((item) => {
                 // Check if the link is a hash link (anchor) on the current page
                 const isHashLink = item.href.includes('#') && item.href.startsWith('/');
+                
+                // Special handling for cloud link
+                if (item.href === '/cloud') {
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        handleCloudClick();
+                        setIsMenuOpen(false);
+                      }}
+                      className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors bg-transparent border-none cursor-pointer text-left"
+                    >
+                      {item.label}
+                    </button>
+                  );
+                }
                 
                 if (isHashLink && location.pathname === '/') {
                   // For hash links on the homepage

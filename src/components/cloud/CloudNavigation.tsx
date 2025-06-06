@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container } from '../ui/Container';
 import { Button } from '../ui/Button';
 import { Sun, Moon, Home, User, Settings, LogOut } from 'lucide-react';
@@ -15,6 +15,13 @@ import {
 
 export function CloudNavigation() {
   const { isDarkMode, toggleTheme } = useTheme();
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {
+    // 클라우드에서 홈으로 이동하는 것을 표시
+    sessionStorage.setItem('previousPath', '/cloud');
+    navigate('/');
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -30,11 +37,14 @@ export function CloudNavigation() {
             </div>
             
             <div className="flex items-center space-x-1">
-              <Link to="/">
-                <Button variant="ghost" size="sm" className="p-2">
-                  <Home className="h-4 w-4" />
-                </Button>
-              </Link>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="p-2"
+                onClick={handleHomeClick}
+              >
+                <Home className="h-4 w-4" />
+              </Button>
               
               <Button 
                 variant="ghost" 
@@ -84,12 +94,14 @@ export function CloudNavigation() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Link to="/">
-              <Button variant="ghost" size="sm">
-                <Home className="h-5 w-5 mr-2" />
-                홈으로
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={handleHomeClick}
+            >
+              <Home className="h-5 w-5 mr-2" />
+              홈으로
+            </Button>
             
             <Button 
               variant="ghost" 

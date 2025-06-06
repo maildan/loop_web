@@ -3,7 +3,7 @@ import { Container } from '../ui/Container';
 import { Section } from '../ui/Section';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { WindowsIcon, MacOSIcon, UbuntuIcon } from '../../assets/icons';
+import { WindowsIcon, MacOSIcon, LinuxIcon } from '../../assets/icons';
 
 export const DownloadSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'pro' | 'novel'>('pro');
@@ -61,16 +61,16 @@ export const DownloadSection: React.FC = () => {
           borderColor: 'border-gray-200 dark:border-gray-800'
         },
         {
-          id: 'novel-ubuntu',
-          os: 'Ubuntu',
-          icon: UbuntuIcon,
-          iconColor: 'text-orange-600',
+          id: 'novel-linux',
+          os: 'Linux',
+          icon: LinuxIcon,
+          iconColor: 'text-yellow-600',
           version: 'v2.1.0',
           size: '210 MB',
           downloadUrl: '#',
           requirements: 'Ubuntu 20.04 이상',
-          bgGradient: 'from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20',
-          borderColor: 'border-orange-200 dark:border-orange-800'
+          bgGradient: 'from-yellow-50 to-orange-50 dark:from-yellow-950/20 dark:to-orange-950/20',
+          borderColor: 'border-yellow-200 dark:border-yellow-800'
         }
       ]
     }
@@ -79,8 +79,10 @@ export const DownloadSection: React.FC = () => {
   const currentData = downloadData[activeTab];
 
   return (
-    <Section id="download">
-      <Container>
+    <Section id="download" className="relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
+      
+      <Container className="relative">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full px-6 py-3 mb-8 border border-slate-200 dark:border-slate-700 shadow-lg">
@@ -99,20 +101,19 @@ export const DownloadSection: React.FC = () => {
 
         {/* Product Tabs */}
         <div className="flex justify-center mb-12">
-          <div className="relative bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+          <div className="relative bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg p-2 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-2xl">
             <div 
-              className={`absolute top-1 bottom-1 w-1/2 bg-gradient-to-r ${currentData.gradient} rounded-md transition-all duration-300 ease-out`}
+              className={`absolute top-2 bottom-2 w-1/2 bg-gradient-to-r ${currentData.gradient} rounded-xl transition-all duration-500 ease-out shadow-xl`}
               style={{
-                left: activeTab === 'pro' ? '4px' : 'calc(50% - 4px)',
-                transform: 'translateX(0)'
+                left: activeTab === 'pro' ? '8px' : '50%'
               }}
             />
             <div className="relative flex">
               <button
                 onClick={() => setActiveTab('pro')}
-                className={`flex-1 px-8 py-3 rounded-md font-semibold text-sm transition-all duration-300 relative z-10 min-w-[100px] flex items-center justify-center ${
+                className={`px-10 py-5 rounded-xl font-bold text-lg transition-all duration-300 relative z-10 ${
                   activeTab === 'pro' 
-                    ? 'text-white' 
+                    ? 'text-white transform scale-105' 
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
@@ -120,9 +121,9 @@ export const DownloadSection: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('novel')}
-                className={`flex-1 px-8 py-3 rounded-md font-semibold text-sm transition-all duration-300 relative z-10 min-w-[100px] flex items-center justify-center ${
+                className={`px-10 py-5 rounded-xl font-bold text-lg transition-all duration-300 relative z-10 ${
                   activeTab === 'novel' 
-                    ? 'text-white' 
+                    ? 'text-white transform scale-105' 
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
                 }`}
               >
@@ -142,7 +143,7 @@ export const DownloadSection: React.FC = () => {
 
         {/* Download Cards */}
         <div className="max-w-5xl mx-auto">
-          <div className={`flex flex-col sm:grid gap-6 ${currentData.downloads.length === 1 ? 'sm:grid-cols-1 max-w-md mx-auto' : 'sm:grid-cols-2 lg:grid-cols-3'}`}>
+          <div className={`grid gap-8 ${currentData.downloads.length === 1 ? 'grid-cols-1 max-w-md mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
             {currentData.downloads.map((download) => (
               <Card 
                 key={download.id}
@@ -156,7 +157,7 @@ export const DownloadSection: React.FC = () => {
                 <div className={`absolute inset-0 bg-gradient-to-br ${currentData.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
                 
                 <CardHeader className="text-center pb-4 relative z-10">
-                  <div className="mb-6 mt-15 -ml-3">
+                  <div className="mb-6">
                     <div className={`inline-flex p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg group-hover:shadow-xl transition-all duration-300 ${download.iconColor}`}>
                       <download.icon size={48} />
                     </div>
@@ -169,22 +170,22 @@ export const DownloadSection: React.FC = () => {
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 relative z-10">
+                <CardContent className="space-y-6 relative z-10">
                   {/* Version Info */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center p-3 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-lg">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center p-3 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-xl">
                       <span className="text-sm font-medium text-slate-600 dark:text-slate-400">버전</span>
-                      <span className="font-semibold text-slate-900 dark:text-white">{download.version}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{download.version}</span>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-lg">
+                    <div className="flex justify-between items-center p-3 bg-white/70 dark:bg-slate-800/70 backdrop-blur-sm rounded-xl">
                       <span className="text-sm font-medium text-slate-600 dark:text-slate-400">크기</span>
-                      <span className="font-semibold text-slate-900 dark:text-white">{download.size}</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{download.size}</span>
                     </div>
                   </div>
 
                   {/* Download Button */}
                   <Button 
-                    className={`w-full py-3 text-base font-semibold bg-gradient-to-r ${currentData.gradient} hover:opacity-90 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300`}
+                    className={`w-full py-4 text-lg font-bold bg-gradient-to-r ${currentData.gradient} hover:opacity-90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105`}
                     onClick={() => window.open(download.downloadUrl, '_blank')}
                   >
                     <div className="flex items-center justify-center gap-2">

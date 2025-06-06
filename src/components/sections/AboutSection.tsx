@@ -44,7 +44,7 @@ export const AboutSection: React.FC = () => {
           {features.map((feature, index) => (
             <Card key={index} className="text-center hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="text-4xl mb-4">{feature.icon}</div>
+                <div className="text-4xl mb-4 mt-15 -ml-3">{feature.icon}</div>
                 <CardTitle className="text-xl mb-2">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
