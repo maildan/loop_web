@@ -5,7 +5,6 @@ import { Card, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 
 export const ServicesSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'pro' | 'novel'>('pro');
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -15,14 +14,6 @@ export const ServicesSection: React.FC = () => {
   }, []);
 
   const osSupport = {
-    pro: [
-      { name: 'Windows', icon: '🪟', supported: true },
-      { name: 'macOS', icon: '🍎', supported: true },
-      { name: 'Linux', icon: '🐧', supported: true },
-      { name: 'Android', icon: '🤖', supported: false },
-      { name: 'iOS', icon: '📱', supported: false },
-      { name: 'Web', icon: '🌐', supported: false },
-    ],
     novel: [
       { name: 'Windows', icon: '🪟', supported: false },
       { name: 'macOS', icon: '🍎', supported: false },
@@ -34,14 +25,6 @@ export const ServicesSection: React.FC = () => {
   };
 
   const features = {
-    pro: [
-      '멀티 워크스페이스',
-      '고급 알림 관리',
-      '키보드 단축키',
-      '플러그인 시스템',
-      '오프라인 모드',
-      '고성능 처리',
-    ],
     novel: [
       '모바일 최적화',
       '터치 인터페이스',
@@ -63,32 +46,8 @@ export const ServicesSection: React.FC = () => {
             Loop 제품 라인업
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            사용자의 니즈에 맞춰 선택할 수 있는 두 가지 버전을 제공합니다.
+            모바일과 웹에서 최고의 경험을 제공하는 Loop Novel을 만나보세요.
           </p>
-        </div>
-
-        {/* Tab Navigation with Animation */}
-        <div className={`flex justify-center mb-12 transition-all duration-1000 delay-200 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          <div className="relative bg-muted p-2 rounded-lg overflow-hidden">
-            <div className="relative flex">
-              <Button
-                variant={activeTab === 'pro' ? 'primary' : 'ghost'}
-                onClick={() => setActiveTab('pro')}
-                className="flex-1 px-8 py-4 rounded-md text-base font-medium min-w-[120px] flex items-center justify-center transition-all duration-300 hover:scale-105"
-              >
-                Loop Pro
-              </Button>
-              <Button
-                variant={activeTab === 'novel' ? 'primary' : 'ghost'}
-                onClick={() => setActiveTab('novel')}
-                className="flex-1 px-8 py-4 rounded-md text-base font-medium min-w-[120px] flex items-center justify-center transition-all duration-300 hover:scale-105"
-              >
-                Loop Novel
-              </Button>
-            </div>
-          </div>
         </div>
 
         {/* Tab Content with Animation */}
@@ -98,19 +57,16 @@ export const ServicesSection: React.FC = () => {
           {/* Product Description */}
           <div className="space-y-6">
             <h3 className="text-2xl font-bold transition-all duration-500">
-              {activeTab === 'pro' ? 'Loop Pro' : 'Loop Novel'}
+              Loop Novel
             </h3>
             <p className="text-muted-foreground leading-relaxed transition-all duration-500">
-              {activeTab === 'pro' 
-                ? '데스크톱 환경에서 최고의 생산성을 제공하는 전문가용 솔루션입니다. 강력한 기능과 확장성으로 업무 효율을 극대화하세요.'
-                : '모바일과 웹에서 언제 어디서나 접근할 수 있는 간편한 솔루션입니다. 직관적인 인터페이스로 빠르게 시작하세요.'
-              }
+              모바일과 웹에서 언제 어디서나 접근할 수 있는 간편한 솔루션입니다. 직관적인 인터페이스로 빠르게 시작하세요.
             </p>
             
             <div className="text-center">
               <h4 className="text-lg font-semibold mb-4 mt-6">주요 기능</h4>
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 justify-items-center">
-                {features[activeTab].map((feature, index) => (
+                {features.novel.map((feature, index) => (
                   <li 
                     key={index} 
                     className={`flex items-center justify-center animate-fadeInUp ${
@@ -133,7 +89,7 @@ export const ServicesSection: React.FC = () => {
           <div className="text-center">
             <h4 className="text-lg font-semibold mb-6 mt-6">플랫폼 지원</h4>
             <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-3 justify-items-center">
-              {osSupport[activeTab].map((os, index) => (
+              {osSupport.novel.map((os, index) => (
                 <Card 
                   key={index} 
                   className={`text-center transition-all duration-900 hover:scale-105 hover:shadow-lg animate-fadeInUp ${

@@ -102,15 +102,13 @@ export const MobileNav = React.memo(function MobileNav({ activeSection = 'overvi
         </nav>
         
         {/* 하단 프로모션 영역 */}
-        <div className="absolute bottom-6 left-4 right-4">
-          <div className="p-4 bg-accent rounded-lg">
-            <h4 className="font-medium text-sm">Loop Pro</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              더 많은 기능을 원하시나요?
-            </p>
-            <Button size="sm" className="w-full mt-3">
-              업그레이드
-            </Button>
+        <div className="mt-auto p-4 bg-muted/50 rounded-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-full"></div>
+            <div>
+              <h4 className="font-medium text-sm">Loop</h4>
+              <p className="text-xs text-muted-foreground">Free Plan</p>
+            </div>
           </div>
         </div>
       </div>

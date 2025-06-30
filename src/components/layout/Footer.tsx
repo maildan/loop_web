@@ -5,14 +5,20 @@ export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
+    solutions: [
+      { label: 'Cloud', href: '/cloud' },
+      { label: 'Analytics', href: '/cloud?tab=analytics' },
+      { label: 'Insights', href: '#' },
+      { label: 'API', href: '#' },
+    ],
     product: [
-      { label: 'Loop Pro', href: '#download-pro' },
-      { label: 'Loop Novel', href: '#download-novel' },
-      { label: '기능', href: '#about' },
-      { label: '플랫폼 지원', href: '#services' },
+      { label: 'Loop Novel', href: '#download' },
+      { label: '데스크톱 앱', href: '#download' },
+      { label: '모바일 앱', href: '#download' },
+      { label: '가격', href: '#' },
     ],
     support: [
-      { label: '도움말', href: '#help' },
+      { label: '도움말', href: '#' },
       { label: '문의하기', href: 'mailto:support@loop.app' },
       { label: '피드백', href: '#feedback' },
       { label: 'FAQ', href: '#faq' },
@@ -69,7 +75,7 @@ export const Footer: React.FC = () => {
               <h3 className="font-semibold mb-4">제품</h3>
               <ul className="space-y-2">
                 {footerLinks.product.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <a
                       href={link.href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -85,7 +91,7 @@ export const Footer: React.FC = () => {
               <h3 className="font-semibold mb-4">지원</h3>
               <ul className="space-y-2">
                 {footerLinks.support.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <a
                       href={link.href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -101,7 +107,7 @@ export const Footer: React.FC = () => {
               <h3 className="font-semibold mb-4">회사</h3>
               <ul className="space-y-2">
                 {footerLinks.company.map((link) => (
-                  <li key={link.href}>
+                  <li key={link.label}>
                     <a
                       href={link.href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"

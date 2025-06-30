@@ -1,9 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container } from '../ui/Container';
 import { Section } from '../ui/Section';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 
+// 간단한 Intersection Observer 커스텀 훅
+const useAnimatedVisibility = <T extends HTMLElement>() => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        rootMargin: '0px',
+        threshold: 0.1
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  const animationClasses = isVisible
+    ? 'opacity-100 translate-y-0'
+    : 'opacity-0 translate-y-10';
+
+  return { ref, animationClasses };
+};
+
 export const AboutSection: React.FC = () => {
+  const titleRef = useAnimatedVisibility<HTMLDivElement>();
+  const featuresRef = useAnimatedVisibility<HTMLDivElement>();
+  const detailsRef = useAnimatedVisibility<HTMLDivElement>();
+
   const features = [
     {
       title: '깔끔한 디자인',
@@ -30,7 +71,10 @@ export const AboutSection: React.FC = () => {
   return (
     <Section id="about" background="muted" padding="xl">
       <Container>
-        <div className="text-center mb-16">
+        <div 
+          ref={titleRef.ref} 
+          className={`text-center mb-16 transition-all duration-700 ease-out ${titleRef.animationClasses}`}
+        >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Loop는 무엇인가요?
           </h2>
@@ -40,7 +84,10 @@ export const AboutSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div 
+          ref={featuresRef.ref}
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16 transition-all duration-700 ease-out ${featuresRef.animationClasses}`}
+        >
           {features.map((feature, index) => (
             <Card key={index} className="text-center hover:shadow-lg transition-shadow">
               <CardHeader>
@@ -54,7 +101,10 @@ export const AboutSection: React.FC = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div 
+          ref={detailsRef.ref}
+          className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center transition-all duration-700 ease-out ${detailsRef.animationClasses}`}
+        >
           <div>
             <h3 className="text-2xl font-bold mb-4">Loop의 차별점</h3>
             <p className="text-muted-foreground mb-4">

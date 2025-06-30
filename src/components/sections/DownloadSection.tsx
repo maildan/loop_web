@@ -6,30 +6,9 @@ import { Button } from '../ui/Button';
 import { WindowsIcon, MacOSIcon, UbuntuIcon } from '../../assets/icons';
 
 export const DownloadSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'pro' | 'novel'>('pro');
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const downloadData = {
-    pro: {
-      title: 'Loop Pro',
-      description: '전문가용 데스크톱 솔루션',
-      gradient: 'from-blue-600 via-purple-600 to-blue-800',
-      accentColor: 'text-blue-500',
-      downloads: [
-        {
-          id: 'pro-windows',
-          os: 'Windows',
-          icon: WindowsIcon,
-          iconColor: 'text-blue-500',
-          version: 'v2.1.0',
-          size: '245 MB',
-          downloadUrl: '#',
-          requirements: 'Windows 10 이상',
-          bgGradient: 'from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20',
-          borderColor: 'border-blue-200 dark:border-blue-800'
-        }
-      ]
-    },
     novel: {
       title: 'Loop Novel',
       description: '크로스 플랫폼 유니버설 솔루션',
@@ -76,7 +55,7 @@ export const DownloadSection: React.FC = () => {
     }
   };
 
-  const currentData = downloadData[activeTab];
+  const currentData = downloadData.novel;
 
   return (
     <Section id="download">
@@ -95,41 +74,6 @@ export const DownloadSection: React.FC = () => {
           <p className="text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
             사용하시는 플랫폼에 맞는 Loop을 선택하여 바로 시작하세요
           </p>
-        </div>
-
-        {/* Product Tabs */}
-        <div className="flex justify-center mb-12">
-          <div className="relative bg-slate-100 dark:bg-slate-800 p-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
-            <div 
-              className={`absolute top-1 bottom-1 w-1/2 bg-gradient-to-r ${currentData.gradient} rounded-md transition-all duration-300 ease-out`}
-              style={{
-                left: activeTab === 'pro' ? '4px' : 'calc(50% - 4px)',
-                transform: 'translateX(0)'
-              }}
-            />
-            <div className="relative flex">
-              <button
-                onClick={() => setActiveTab('pro')}
-                className={`flex-1 px-8 py-3 rounded-md font-semibold text-sm transition-all duration-300 relative z-10 min-w-[100px] flex items-center justify-center ${
-                  activeTab === 'pro' 
-                    ? 'text-white' 
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-              >
-                Loop Pro
-              </button>
-              <button
-                onClick={() => setActiveTab('novel')}
-                className={`flex-1 px-8 py-3 rounded-md font-semibold text-sm transition-all duration-300 relative z-10 min-w-[100px] flex items-center justify-center ${
-                  activeTab === 'novel' 
-                    ? 'text-white' 
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-              >
-                Loop Novel
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Product Info */}
@@ -215,13 +159,10 @@ export const DownloadSection: React.FC = () => {
           <div className="max-w-4xl mx-auto">
             <div className="bg-gradient-to-r from-white/80 to-slate-50/80 dark:from-slate-800/80 dark:to-slate-900/80 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-xl">
               <h4 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
-                {activeTab === 'pro' ? '전문가를 위한 강력한 도구' : '모든 플랫폼에서 동일한 경험'}
+                모든 플랫폼에서 동일한 경험
               </h4>
               <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                {activeTab === 'pro' 
-                  ? 'Loop Pro는 Windows에서 최적화된 성능을 제공하며, 전문가 수준의 워크플로우를 지원합니다. 고급 기능과 확장성으로 생산성을 극대화하세요.'
-                  : 'Loop Novel은 Windows, macOS, Linux 모든 플랫폼에서 일관된 사용 경험을 제공합니다. 어떤 환경에서도 동일한 기능을 사용할 수 있습니다.'
-                }
+                Loop Novel은 Windows, macOS, Linux 모든 플랫폼에서 일관된 사용 경험을 제공합니다. 어떤 환경에서도 동일한 기능을 사용할 수 있습니다.
               </p>
               <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
                 <div className="flex items-center gap-2">

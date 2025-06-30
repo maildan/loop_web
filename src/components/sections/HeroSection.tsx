@@ -19,10 +19,10 @@ export const HeroSection: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button size="lg" className="text-lg px-8 py-3">
-              Loop Pro 다운로드
+              Loop 다운로드
             </Button>
             <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-              Loop Novel 다운로드
+              자세히 보기
             </Button>
           </div>
 

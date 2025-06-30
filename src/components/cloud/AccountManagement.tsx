@@ -103,7 +103,7 @@ export function AccountManagement() {
               <CardContent>
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h3 className="font-medium">Loop Pro</h3>
+                    <h3 className="font-medium">프리미엄 플랜</h3>
                     <p className="text-sm text-muted-foreground">연간 구독</p>
                   </div>
                   <Badge>활성</Badge>
@@ -135,7 +135,7 @@ export function AccountManagement() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center p-3 border rounded-md">
                     <div>
-                      <p className="font-medium">Loop Pro 연간 구독</p>
+                      <p className="font-medium">프리미엄 플랜 연간 구독</p>
                       <p className="text-sm text-muted-foreground">2025년 1월 15일</p>
                     </div>
                     <div className="text-right">
@@ -148,7 +148,7 @@ export function AccountManagement() {
                   </div>
                   <div className="flex justify-between items-center p-3 border rounded-md">
                     <div>
-                      <p className="font-medium">Loop Pro 월간 구독</p>
+                      <p className="font-medium">프리미엄 플랜 월간 구독</p>
                       <p className="text-sm text-muted-foreground">2024년 12월 15일</p>
                     </div>
                     <div className="text-right">
@@ -180,7 +180,7 @@ export function AccountManagement() {
                         <Users className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">MacBook Pro</p>
+                        <p className="font-medium">데스크톱 (macOS)</p>
                         <p className="text-xs text-muted-foreground">최근 활동: 지금</p>
                       </div>
                     </div>
@@ -206,7 +206,7 @@ export function AccountManagement() {
                         <Users className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-medium">iPad Pro</p>
+                        <p className="font-medium">태블릿 (iPadOS)</p>
                         <p className="text-xs text-muted-foreground">최근 활동: 2일 전</p>
                       </div>
                     </div>

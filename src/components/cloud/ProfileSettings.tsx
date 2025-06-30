@@ -91,7 +91,7 @@ export function ProfileSettings() {
           </div>
           <Badge variant="outline" className="flex items-center gap-2" size="lg">
             <User className="h-3 w-3" />
-            Pro 계정
+            플랜 정보
           </Badge>
         </div>
 
