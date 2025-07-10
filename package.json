@@ -1,6 +1,6 @@
 {
   "name": "loop_3_web",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "homepage": "/",
   "dependencies": {
@@ -33,7 +33,7 @@
     "start:dev": "NODE_ENV=development craco start",
     "build": "NODE_ENV=production craco build",
     "build:dev": "NODE_ENV=development craco build",
-    "build:analyze": "ANALYZE=true NODE_ENV=production craco build",
+    "build:analyze": "=true NODE_ENV=production craco build",
     "build:cdn": "NODE_ENV=production REACT_APP_CDN_ENABLED=true craco build",
     "cloudflare:setup": "./setup-cloudflare.sh",
     "cloudflare:dns": "./setup-cloudflare.sh --dns-only",
