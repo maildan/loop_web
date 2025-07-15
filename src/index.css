@@ -1,3 +1,9 @@
+body:not(.dark) .card {
+  background: #fff !important;
+  color: hsl(var(--foreground)) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+  border: 1px solid #f1f5f9 !important;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

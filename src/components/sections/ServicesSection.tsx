@@ -6,22 +6,22 @@ import { Card, CardHeader, CardTitle } from '../ui/Card';
 
 const features = [
   {
-    icon: <Smartphone className="h-8 w-8 text-primary" />,
+    icon: <Smartphone className="h-8 w-8 text-primary dark:text-primary-foreground" />, 
     title: '모바일 최적화',
     description: '어떤 기기에서든 완벽하게 반응하는 인터페이스를 경험하세요. 작고 강력합니다.'
   },
   {
-    icon: <Touchpad className="h-8 w-8 text-primary" />,
+    icon: <Touchpad className="h-8 w-8 text-primary dark:text-primary-foreground" />,
     title: '터치 인터페이스',
     description: '손끝으로 모든 것을 제어하세요. 직관적인 제스처로 작업 효율을 높입니다.'
   },
   {
-    icon: <Cloud className="h-8 w-8 text-primary" />,
+    icon: <Cloud className="h-8 w-8 text-primary dark:text-primary-foreground" />,
     title: '클라우드 동기화',
     description: '모든 디바이스에서 데이터가 실시간으로 동기화됩니다. 언제나 최신 상태를 유지하세요.'
   },
   {
-    icon: <Globe className="h-8 w-8 text-primary" />,
+    icon: <Globe className="h-8 w-8 text-primary dark:text-primary-foreground" />,
     title: '웹 접근성',
     description: '별도의 설치 없이 브라우저만 있다면 어디서든 Loop에 접근할 수 있습니다.'
   }
@@ -42,13 +42,13 @@ export const ServicesSection: React.FC = () => {
           {features.map((feature, index) => (
             <Card 
               key={index} 
-              className="text-center p-6 hover:shadow-xl hover:-translate-y-2 transition-transform duration-300 ease-in-out"
+              className="text-center p-6 bg-white dark:bg-slate-800 hover:shadow-xl hover:-translate-y-2 transition-transform duration-300 ease-in-out border border-slate-100 dark:border-slate-700"
             >
               <CardHeader className="flex flex-col items-center gap-4">
-                <div className="bg-primary/10 p-4 rounded-full">
+                <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
                   {feature.icon}
                 </div>
-                <CardTitle>{feature.title}</CardTitle>
+                <CardTitle className="text-slate-900 dark:text-primary-foreground">{feature.title}</CardTitle>
               </CardHeader>
               <p className="text-muted-foreground text-sm leading-relaxed">
                 {feature.description}
