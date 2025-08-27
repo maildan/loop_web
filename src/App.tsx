@@ -17,7 +17,9 @@ import {
   AccountManagement,
   ScrollToTop,
   LoginPage,
-  RegisterPage
+  RegisterPage,
+  PrivacyPolicy,
+  TermsOfService
 } from './components';
 
 // Main Landing Page Component
@@ -59,6 +61,32 @@ function ProfilePage() {
 }
 
 // Account Management Page Component
+// Privacy Policy Page Component
+function PrivacyPolicyPage() {
+  return (
+    <>
+      <Navigation />
+      <main>
+        <PrivacyPolicy />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
+// Terms of Service Page Component
+function TermsOfServicePage() {
+  return (
+    <>
+      <Navigation />
+      <main>
+        <TermsOfService />
+      </main>
+      <Footer />
+    </>
+  );
+}
+
 function AccountPage() {
   return (
     <>
@@ -105,6 +133,8 @@ function AppWithLoadingBar() {
           <Route path="/account" element={<AccountPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         </Routes>
         <CloudFlareStatus />
       </div>

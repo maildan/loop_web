@@ -25,8 +25,8 @@ export const Footer: React.FC = () => {
     ],
     company: [
       { label: '회사 소개', href: '#about' },
-      { label: '개인정보처리방침', href: '#privacy' },
-      { label: '이용약관', href: '#terms' },
+      { label: '개인정보처리방침', href: '/privacy-policy' },
+      { label: '이용약관', href: '/terms-of-service' },
       { label: '보안', href: '#security' },
     ],
   };
@@ -126,13 +126,13 @@ export const Footer: React.FC = () => {
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6">
               <a
-                href="#privacy"
+                href="/privacy-policy"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 개인정보처리방침
               </a>
               <a
-                href="#terms"
+                href="/terms-of-service"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 이용약관
