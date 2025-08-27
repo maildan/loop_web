@@ -3,7 +3,6 @@ export { Card, CardHeader, CardTitle, CardContent } from './Card';
 export { Section } from './Section';
 export { Container } from './Container';
 export { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './Sheet';
-export { CloudFlareStatus } from './CloudFlareStatus';
 export { RouteLoadingBar } from './RouteLoadingBar';
 export { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './DropdownMenu';
 export { Avatar, AvatarFallback } from './Avatar';

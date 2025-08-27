@@ -13,6 +13,9 @@ module.exports = {
     },
   },
   webpack: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/'),
+    },
     plugins: {
       add: process.env.ANALYZE === 'true' ? [
         new BundleAnalyzerPlugin({

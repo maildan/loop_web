@@ -22,13 +22,14 @@ const useAnimatedVisibility = <T extends HTMLElement>() => {
       }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const currentElement = ref.current;
+    if (currentElement) {
+      observer.observe(currentElement);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentElement) {
+        observer.unobserve(currentElement);
       }
     };
   }, []);
@@ -47,24 +48,24 @@ export const AboutSection: React.FC = () => {
 
   const features = [
     {
-      title: '깔끔한 디자인',
-      description: '직관적이고 현대적인 인터페이스로 사용자 경험을 극대화합니다.',
-      icon: '🎨',
+      title: 'AI 기반 분석',
+      description: '글의 구조, 가독성, 감정선까지 분석하여 더 나은 이야기를 만들도록 돕습니다.',
+      icon: '📊',
     },
     {
-      title: '호환성',
-      description: '다양한 메신저와 협업 도구를 하나의 플랫폼에서 사용할 수 있습니다.',
-      icon: '🔗',
+      title: '똑똑한 AI 에이전트',
+      description: '자료 조사, 아이디어 구체화, 교정 및 교열까지 AI가 함께합니다.',
+      icon: '🤖',
     },
     {
-      title: '클라우드와 호환',
-      description: 'Google Drive, Dropbox 등 클라우드 저장소와 완벽하게 연동됩니다.',
-      icon: '☁️',
+      title: '집중을 위한 디자인',
+      description: '불필요한 모든 것을 덜어내고 오직 글쓰기에만 몰입할 수 있는 환경을 제공합니다.',
+      icon: '✍️',
     },
     {
-      title: '다양한 앱',
-      description: 'Slack, Discord, Notion, Teams 등 주요 생산성 앱을 모두 지원합니다.',
-      icon: '📱',
+      title: '강력한 데스크톱 성능',
+      description: 'Electron 기반으로 제작되어 어떤 운영체제에서도 빠르고 안정적인 성능을 보장합니다.',
+      icon: '💻',
     },
   ];
 
@@ -76,11 +77,10 @@ export const AboutSection: React.FC = () => {
           className={`text-center mb-16 transition-all duration-700 ease-out ${titleRef.animationClasses}`}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Loop는 무엇인가요?
+            오직 작가를 위한 단 하나의 도구, Loop
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            흩어져 있는 메신저와 협업 도구들을 하나로 모아 생산성을 극대화하는 
-            새로운 방식의 통합 플랫폼입니다.
+            Loop는 복잡한 기능 대신 글쓰기 본질에 집중할 수 있도록 설계된 워드프로세서입니다. 당신의 창작 과정을 분석하고, AI 에이전트가 도우며, 깔끔한 디자인으로 몰입감을 더합니다.
           </p>
         </div>
 
@@ -106,27 +106,25 @@ export const AboutSection: React.FC = () => {
           className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center transition-all duration-700 ease-out ${detailsRef.animationClasses}`}
         >
           <div>
-            <h3 className="text-2xl font-bold mb-4">Loop의 차별점</h3>
+            <h3 className="text-2xl font-bold mb-4">창작의 모든 과정을 함께</h3>
             <p className="text-muted-foreground mb-4">
-              더 이상 여러 앱을 오가며 시간을 낭비하지 마세요. 
-              Loop는 모든 커뮤니케이션과 협업 도구를 한 곳에 모아줍니다.
+              단순한 텍스트 편집기를 넘어, Loop는 아이디어 구상부터 탈고까지 작가의 모든 여정을 지원하는 창작 파트너입니다.
             </p>
             <p className="text-muted-foreground mb-6">
-              실시간 동기화, 스마트한 알림 관리, 그리고 직관적인 인터페이스로 
-              업무 효율성을 새로운 차원으로 끌어올리세요.
+              데이터 기반의 분석과 AI의 지원을 통해 당신의 이야기에 생명을 불어넣고, 오직 창작에만 집중할 수 있는 환경을 경험해보세요.
             </p>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-primary">10+</div>
-                <div className="text-sm text-muted-foreground">지원 플랫폼</div>
+                <div className="text-2xl font-bold text-primary">3+</div>
+                <div className="text-sm text-muted-foreground">핵심 기능</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-primary">2</div>
-                <div className="text-sm text-muted-foreground">제품 라인업</div>
+                <div className="text-2xl font-bold text-primary">Alpha</div>
+                <div className="text-sm text-muted-foreground">현재 버전</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-primary">∞</div>
-                <div className="text-sm text-muted-foreground">가능성</div>
+                <div className="text-sm text-muted-foreground">창의성</div>
               </div>
             </div>
           </div>

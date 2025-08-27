@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import CloudFlareOptimizer from './utils/cloudflareOptimizer';
-import { CloudFlareStatus } from './components/ui/CloudFlareStatus';
 import { RouteLoadingBar } from './components/ui/RouteLoadingBar';
 import {
   Navigation,
@@ -136,7 +135,6 @@ function AppWithLoadingBar() {
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-of-service" element={<TermsOfServicePage />} />
         </Routes>
-        <CloudFlareStatus />
       </div>
     </>
   );

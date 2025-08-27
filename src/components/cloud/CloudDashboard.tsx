@@ -1,20 +1,23 @@
 import React, { useState, useMemo, useEffect, useCallback, Suspense } from 'react';
 import { Container } from '../ui/Container';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/Sheet';
 import { Button } from '../ui/Button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/Tabs';
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '../ui/Table';
 import { Badge } from '../ui/Badge';
 import { Document } from './DocumentSelector';
 import { MobileNav } from './MobileNav';
 import { useTheme } from '../ui/ThemeProvider';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { StatCard } from './StatCard';
+import { RecentDocuments } from './RecentDocuments';
 import { 
   FileText, 
   Clock, 
   TrendingUp, 
   Target,
-  Edit
+  PlusCircle,
+  X as XIcon
 } from 'lucide-react';
 import {
   LineChart,
@@ -98,6 +101,8 @@ const typeDistribution = [
 export function CloudDashboard() {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [activeTab, setActiveTab] = useState('overview');
+  const [isMobileViewerOpen, setIsMobileViewerOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [tabHistory, setTabHistory] = useState<string[]>(['overview']); // Track tab navigation history
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
@@ -121,6 +126,22 @@ export function CloudDashboard() {
   }, [location.search]);
 
   // 탭 변경 시 URL 업데이트 및 히스토리에 추가
+    useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleDocumentSelect = (doc: Document) => {
+    setSelectedDocument(doc);
+    if (isMobile) {
+      setIsMobileViewerOpen(true);
+    }
+  };
+
   const handleTabChange = useCallback((newTab: string) => {
     setActiveTab(newTab);
     
@@ -225,6 +246,10 @@ export function CloudDashboard() {
             <h1 className="text-2xl font-bold">대시보드</h1>
             <Badge variant="secondary">Beta</Badge>
           </div>
+          <Button>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            새 문서 만들기
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -237,57 +262,30 @@ export function CloudDashboard() {
           <TabsContent value="overview" className="space-y-6">
             {/* Stats Overview */}
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">총 문서 수</CardTitle>
-                  <FileText className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalDocuments}</div>
-                  <p className="text-xs text-muted-foreground">
-                    +12% 지난 주 대비
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">총 단어 수</CardTitle>
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalWords.toLocaleString()}</div>
-                  <p className="text-xs text-muted-foreground">
-                    +8% 지난 주 대비
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">총 읽기 시간</CardTitle>
-                  <Clock className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalReadingTime}분</div>
-                  <p className="text-xs text-muted-foreground">
-                    평균 {Math.round(stats.totalReadingTime / stats.totalDocuments)}분/문서
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">문서당 평균 단어</CardTitle>
-                  <Target className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stats.avgWordsPerDoc}</div>
-                  <p className="text-xs text-muted-foreground">
-                    표준 A4 약 3-4장
-                  </p>
-                </CardContent>
-              </Card>
+              <StatCard 
+                title="총 문서 수" 
+                value={stats.totalDocuments} 
+                description="+12% 지난 주 대비" 
+                icon={<FileText className="h-4 w-4 text-muted-foreground" />}
+              />
+              <StatCard 
+                title="총 단어 수" 
+                value={stats.totalWords.toLocaleString()} 
+                description="+8% 지난 주 대비" 
+                icon={<TrendingUp className="h-4 w-4 text-muted-foreground" />}
+              />
+              <StatCard 
+                title="총 읽기 시간" 
+                value={`${stats.totalReadingTime}분`} 
+                description={`평균 ${Math.round(stats.totalReadingTime / stats.totalDocuments)}분/문서`} 
+                icon={<Clock className="h-4 w-4 text-muted-foreground" />}
+              />
+              <StatCard 
+                title="문서당 평균 단어" 
+                value={stats.avgWordsPerDoc} 
+                description="표준 A4 약 3-4장" 
+                icon={<Target className="h-4 w-4 text-muted-foreground" />}
+              />
             </div>
 
             {/* Charts */}
@@ -417,59 +415,7 @@ export function CloudDashboard() {
             </div>
 
             {/* Recent Documents */}
-            <Card>
-              <CardHeader>
-                <CardTitle>최근 문서</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>문서명</TableHead>
-                      <TableHead>유형</TableHead>
-                      <TableHead>수정일</TableHead>
-                      <TableHead>단어 수</TableHead>
-                      <TableHead>작업</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {mockDocuments.slice(0, 3).map((doc) => (
-                      <TableRow key={doc.id} onClick={() => {
-                        setSelectedDocument(doc);
-                        setActiveTab('documents');
-                      }} className="cursor-pointer">
-                        <TableCell className="font-medium">{doc.name}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline">
-                            {doc.type === 'google-docs' ? 'Google Docs' : 
-                             doc.type === 'notion' ? 'Notion' : 
-                             doc.type === 'slack' ? 'Slack' : '기타'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{doc.lastModified.toLocaleDateString('ko-KR')}</TableCell>
-                        <TableCell>{doc.wordCount.toLocaleString()}</TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                // 수정 기능 구현 자리
-                                setSelectedDocument(doc);
-                                setActiveTab('documents');
-                              }}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
+            <RecentDocuments documents={mockDocuments} onDocumentSelect={handleDocumentSelect} />
           </TabsContent>
 
             <TabsContent value="documents" className="space-y-6">
@@ -614,25 +560,25 @@ export function CloudDashboard() {
               </Card>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-3 overflow-x-hidden">
-              <div className="lg:col-span-1 min-w-0 overflow-x-hidden">
+            <div className="grid gap-6 lg:grid-cols-3">
+              <div className="lg:col-span-1 min-w-0">
               <Card>
                 <CardHeader>
                 <CardTitle>문서 목록</CardTitle>
                 </CardHeader>
-                <CardContent className="overflow-x-hidden">
+                <CardContent>
                 <Suspense fallback={<LoadingSpinner />}>
                   <DocumentSelector
                     documents={mockDocuments}
                     selectedDocument={selectedDocument}
-                    onDocumentSelect={setSelectedDocument}
+                    onDocumentSelect={handleDocumentSelect}
                   />
                 </Suspense>
                 </CardContent>
               </Card>
               </div>
 
-              <div className="lg:col-span-2 min-w-0 overflow-x-hidden">{selectedDocument ? (
+              <div className="lg:col-span-2 min-w-0 hidden lg:block">{selectedDocument ? (
                 <Suspense fallback={<LoadingSpinner />}>
                   <DocumentViewer document={selectedDocument} />
                 </Suspense>
@@ -648,6 +594,34 @@ export function CloudDashboard() {
                 </Card>
               )}
               </div>
+
+              {isMobile && (
+                <Sheet open={isMobileViewerOpen} onOpenChange={setIsMobileViewerOpen}>
+                  <SheetContent side="right" className="w-full sm:max-w-full h-full flex flex-col">
+                    <SheetHeader className="flex-shrink-0 flex flex-row items-center justify-between">
+                      <SheetTitle className="truncate flex-grow pr-4">{selectedDocument?.name}</SheetTitle>
+                      <button 
+                        onClick={() => setIsMobileViewerOpen(false)} 
+                        className="p-1 rounded-full text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                      >
+                        <XIcon className="h-5 w-5" />
+                        <span className="sr-only">Close</span>
+                      </button>
+                    </SheetHeader>
+                    <div className="flex-grow overflow-y-auto p-6">
+                      {selectedDocument ? (
+                        <Suspense fallback={<LoadingSpinner />}>
+                          <DocumentViewer document={selectedDocument} />
+                        </Suspense>
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-muted-foreground">
+                          문서가 선택되지 않았습니다.
+                        </div>
+                      )}
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              )}
             </div>
             </TabsContent>
 

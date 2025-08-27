@@ -25,7 +25,8 @@ export const DownloadSection: React.FC = () => {
           downloadUrl: '#',
           requirements: 'Windows 10 이상',
           bgGradient: 'from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20',
-          borderColor: 'border-blue-200 dark:border-blue-800'
+          borderColor: 'border-blue-200 dark:border-blue-800',
+          released: true
         },
         {
           id: 'novel-macos',
@@ -37,19 +38,21 @@ export const DownloadSection: React.FC = () => {
           downloadUrl: '#',
           requirements: 'macOS 11.0 이상',
           bgGradient: 'from-gray-50 to-slate-50 dark:from-gray-950/20 dark:to-slate-950/20',
-          borderColor: 'border-gray-200 dark:border-gray-800'
+          borderColor: 'border-gray-200 dark:border-gray-800',
+          released: true
         },
         {
           id: 'novel-ubuntu',
-          os: 'Ubuntu',
+          os: 'Linux',
           icon: UbuntuIcon,
           iconColor: 'text-orange-600',
-          version: 'v2.1.0',
-          size: '210 MB',
+          version: '출시 예정',
+          size: '- MB',
           downloadUrl: '#',
           requirements: 'Ubuntu 20.04 이상',
-          bgGradient: 'from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20',
-          borderColor: 'border-orange-200 dark:border-orange-800'
+          bgGradient: 'from-gray-100 to-gray-200 dark:from-gray-800/20 dark:to-gray-900/20',
+          borderColor: 'border-gray-300 dark:border-gray-700',
+          released: false
         }
       ]
     }
@@ -127,17 +130,26 @@ export const DownloadSection: React.FC = () => {
                   </div>
 
                   {/* Download Button */}
-                  <Button 
-                    className={`w-full py-3 text-base font-semibold bg-gradient-to-r ${currentData.gradient} hover:opacity-90 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300`}
-                    onClick={() => window.open(download.downloadUrl, '_blank')}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <span>다운로드</span>
-                      <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m0 0l-4-4m4 4l4-4" />
-                      </svg>
-                    </div>
-                  </Button>
+                  {download.released ? (
+                    <Button 
+                      className={`w-full py-3 text-base font-semibold bg-gradient-to-r ${currentData.gradient} hover:opacity-90 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300`}
+                      onClick={() => window.open(download.downloadUrl, '_blank')}
+                    >
+                      <div className="flex items-center justify-center gap-2">
+                        <span>다운로드</span>
+                        <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m0 0l-4-4m4 4l4-4" />
+                        </svg>
+                      </div>
+                    </Button>
+                  ) : (
+                    <Button 
+                      className={`w-full py-3 text-base font-semibold bg-gray-400 dark:bg-gray-600 text-white rounded-lg cursor-not-allowed`}
+                      disabled
+                    >
+                      출시 예정
+                    </Button>
+                  )}
 
                   {/* Additional Links */}
                   <div className="flex justify-between text-sm">
