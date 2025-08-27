@@ -95,7 +95,7 @@ module.exports = {
     hot: true,
     // 모든 IP에서 접근 가능하도록 설정
     host: '0.0.0.0',
-    port: 3001,
+    port: 3000,
     allowedHosts: 'all',
     client: {
       overlay: {
