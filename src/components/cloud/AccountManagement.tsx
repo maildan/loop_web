@@ -14,83 +14,13 @@ export function AccountManagement() {
           <h1 className="text-2xl font-bold">계정 관리</h1>
         </div>
 
-        <Tabs defaultValue="security">
+        <Tabs defaultValue="subscription">
           <TabsList className="w-full mb-8">
-            <TabsTrigger value="security">보안</TabsTrigger>
             <TabsTrigger value="subscription">구독 관리</TabsTrigger>
             <TabsTrigger value="devices">연결된 기기</TabsTrigger>
             <TabsTrigger value="advanced">고급 설정</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="security" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center">
-                  <ShieldAlert className="h-5 w-5 mr-2 text-primary" />
-                  <CardTitle>보안 설정</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-4">비밀번호 변경</h3>
-                  <div className="grid gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">현재 비밀번호</label>
-                      <input 
-                        type="password" 
-                        className="w-full p-2 border rounded-md bg-background"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">새 비밀번호</label>
-                      <input 
-                        type="password" 
-                        className="w-full p-2 border rounded-md bg-background"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">비밀번호 확인</label>
-                      <input 
-                        type="password" 
-                        className="w-full p-2 border rounded-md bg-background"
-                      />
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <Button>비밀번호 변경</Button>
-                  </div>
-                </div>
-                
-                <div className="pt-4 border-t">
-                  <h3 className="text-lg font-medium mb-4">2단계 인증</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    2단계 인증을 활성화하여 계정 보안을 강화하세요.
-                  </p>
-                  <Button variant="outline">
-                    <Key className="h-4 w-4 mr-2" />
-                    2단계 인증 설정
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <div className="flex items-center">
-                  <AlertTriangle className="h-5 w-5 mr-2 text-destructive" />
-                  <CardTitle>위험 구역</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  계정을 삭제하면 모든 데이터가 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.
-                </p>
-                <Button variant="outline" className="text-destructive border-destructive hover:bg-destructive/10">
-                  계정 삭제
-                </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
           
           <TabsContent value="subscription" className="space-y-6">
             <Card>

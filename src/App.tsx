@@ -18,7 +18,8 @@ import {
   LoginPage,
   RegisterPage,
   PrivacyPolicy,
-  TermsOfService
+  TermsOfService,
+  AuthCallbackPage
 } from './components';
 
 // Main Landing Page Component
@@ -134,6 +135,7 @@ function AppWithLoadingBar() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-of-service" element={<TermsOfServicePage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
         </Routes>
       </div>
     </>

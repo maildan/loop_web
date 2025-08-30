@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container } from '../ui/Container';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -68,14 +68,48 @@ export function ProfileSettings() {
   const [formData, setFormData] = useState({
     name: '사용자',
     email: 'user@example.com',
-    position: '개발자',
-    company: 'Loop Inc.',
-    bio: 'Loop를 사용하는 개발자입니다. 타이핑 최적화와 생산성 향상에 관심이 많습니다.'
+    profilePictureUrl: '',
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await fetch('/api/users/me', {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (response.ok) {
+            const userData = await response.json();
+            setFormData(prev => ({
+              ...prev,
+              name: userData.name || '사용자',
+              email: userData.email || '이메일 정보 없음',
+              profilePictureUrl: userData.profilePictureUrl || '',
+            }));
+          } else {
+            // Handle error, e.g., token expired
+            console.error('Failed to fetch user data');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleSave = () => {
     setIsEditing(false);
     // Here you would typically save to your backend
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
   };
 
   return (
@@ -96,7 +130,7 @@ export function ProfileSettings() {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="h-4 w-4" />
               프로필
@@ -104,10 +138,6 @@ export function ProfileSettings() {
             <TabsTrigger value="notifications" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
               알림
-            </TabsTrigger>
-            <TabsTrigger value="security" className="flex items-center gap-2">
-              <Shield className="h-4 w-4" />
-              보안
             </TabsTrigger>
             <TabsTrigger value="preferences" className="flex items-center gap-2">
               <Palette className="h-4 w-4" />
@@ -122,10 +152,10 @@ export function ProfileSettings() {
                   <CardContent className="pt-6 pb-6">
                     <div className="relative inline-block">
                       <Avatar 
-                        src="https://randomuser.me/api/portraits/men/21.jpg" 
+                        src={formData.profilePictureUrl}
                         alt="사용자 프로필"
                         size="lg"
-                        fallback="사용자"
+                        fallback={formData.name?.[0] || 'U'}
                       />
                       <Button 
                         size="sm" 
@@ -139,10 +169,6 @@ export function ProfileSettings() {
                     <div className="mt-4 space-y-2">
                       <h2 className="text-xl font-semibold">{formData.name}</h2>
                       <p className="text-sm text-muted-foreground">{formData.email}</p>
-                      <Badge variant="secondary" className="mt-2" size="lg">
-                        <Briefcase className="h-3 w-3 mr-1" />
-                        {formData.position}
-                      </Badge>
                     </div>
                     
                     <Button 
@@ -206,51 +232,6 @@ export function ProfileSettings() {
                         />
                         <p className="text-xs text-muted-foreground">이메일은 변경할 수 없습니다</p>
                       </div>
-
-                      <div className="space-y-2">
-                        <label className="flex items-center text-sm font-medium gap-2">
-                          <Briefcase className="h-4 w-4" />
-                          직책
-                        </label>
-                        <input 
-                          type="text" 
-                          className={`w-full p-3 border rounded-lg bg-background transition-colors ${
-                            isEditing ? 'border-primary' : 'border-border'
-                          } ${!isEditing && 'opacity-70'}`}
-                          value={formData.position}
-                          onChange={(e) => setFormData({...formData, position: e.target.value})}
-                          disabled={!isEditing}
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="flex items-center text-sm font-medium gap-2">
-                          <Building className="h-4 w-4" />
-                          소속
-                        </label>
-                        <input 
-                          type="text" 
-                          className={`w-full p-3 border rounded-lg bg-background transition-colors ${
-                            isEditing ? 'border-primary' : 'border-border'
-                          } ${!isEditing && 'opacity-70'}`}
-                          value={formData.company}
-                          onChange={(e) => setFormData({...formData, company: e.target.value})}
-                          disabled={!isEditing}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium">자기소개</label>
-                      <textarea 
-                        className={`w-full p-3 border rounded-lg bg-background h-24 transition-colors ${
-                          isEditing ? 'border-primary' : 'border-border'
-                        } ${!isEditing && 'opacity-70'}`}
-                        value={formData.bio}
-                        onChange={(e) => setFormData({...formData, bio: e.target.value})}
-                        disabled={!isEditing}
-                        placeholder="자신에 대해 간단히 소개해주세요..."
-                      />
                     </div>
 
                     {isEditing && (
@@ -337,52 +318,6 @@ export function ProfileSettings() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="security" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  보안 설정
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h3 className="font-medium flex items-center gap-2">
-                        <Key className="h-4 w-4" />
-                        비밀번호 변경
-                      </h3>
-                      <p className="text-sm text-muted-foreground">계정 보안을 위해 정기적으로 비밀번호를 변경하세요</p>
-                    </div>
-                    <Button variant="outline" size="sm" className="whitespace-nowrap min-w-[80px]">
-                      변경하기
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h3 className="font-medium">2단계 인증</h3>
-                      <p className="text-sm text-muted-foreground">계정 보안을 강화하기 위해 2단계 인증을 활성화하세요</p>
-                    </div>
-                    <Button variant="outline" size="sm" className="whitespace-nowrap min-w-[80px]">
-                      설정하기
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center justify-between p-4 border rounded-lg">
-                    <div>
-                      <h3 className="font-medium">로그인 기록</h3>
-                      <p className="text-sm text-muted-foreground">최근 로그인 기록을 확인하세요</p>
-                    </div>
-                    <Button variant="outline" size="sm" className="whitespace-nowrap min-w-[80px]">
-                      확인하기
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
 
           <TabsContent value="preferences" className="space-y-6">
             <Card>

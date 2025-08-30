@@ -106,5 +106,11 @@ module.exports = {
         warnings: false,
       },
     },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3500',
+        changeOrigin: true,
+      },
+    },
   },
 };
