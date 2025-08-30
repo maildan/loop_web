@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container } from '../ui/Container';
 import { Button } from '../ui/Button';
 import { Sun, Moon, Home, User, Settings, LogOut } from 'lucide-react';
 import { Avatar } from '../ui/Avatar';
 import { useTheme } from '../ui/ThemeProvider';
+import { useAuth } from '../../hooks/useAuth';
 import { logout } from '../../services/auth';
 import { 
   DropdownMenu, 
@@ -15,6 +16,10 @@ import {
 
 export function CloudNavigation() {
   const { isDarkMode, toggleTheme } = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+  
+  console.log('🔍 CloudNavigation user:', user);
   const navigate = useNavigate();
 
   const handleHomeClick = () => {
@@ -59,10 +64,10 @@ export function CloudNavigation() {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar 
-                    src="https://randomuser.me/api/portraits/men/21.jpg" 
-                    alt="사용자 프로필"
+                    src={user?.profilePictureUrl || "https://randomuser.me/api/portraits/men/21.jpg"} 
+                    alt={user?.name || "사용자 프로필"}
                     size="sm"
-                    fallback="사용자"
+                    fallback={user?.name || "사용자"}
                     className="cursor-pointer"
                   />
                 </DropdownMenuTrigger>
@@ -115,12 +120,12 @@ export function CloudNavigation() {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="flex items-center space-x-2 cursor-pointer">
-                  <span className="text-sm text-muted-foreground">사용자님</span>
+                  <span className="text-sm text-muted-foreground">{user?.name || '사용자'}님</span>
                   <Avatar 
-                    src="https://randomuser.me/api/portraits/men/21.jpg" 
-                    alt="사용자 프로필"
+                    src={user?.profilePictureUrl || "https://randomuser.me/api/portraits/men/21.jpg"} 
+                    alt={user?.name || "사용자 프로필"}
                     size="sm"
-                    fallback="사용자"
+                    fallback={user?.name || "사용자"}
                   />
                 </div>
               </DropdownMenuTrigger>

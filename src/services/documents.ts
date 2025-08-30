@@ -32,7 +32,9 @@ export const fetchDashboardStats = async () => {
   return response.json();
 };
 
-export const createDocument = async (title: string): Promise<any> => {
+import { Document } from '../components/cloud/DocumentSelector';
+
+export const createDocument = async (title: string): Promise<Document> => {
   const token = localStorage.getItem('token');
   if (!token) {
     throw new Error('인증 토큰이 없습니다.');

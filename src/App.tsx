@@ -157,14 +157,11 @@ function App() {
     if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
       navigator.serviceWorker.register('/sw.js')
         .then((registration) => {
-          console.log('SW registered: ', registration);
         })
         .catch((registrationError) => {
-          console.log('SW registration failed: ', registrationError);
         });
     }
 
-    console.log('[CF] CloudFlare optimization initialized');
 
     // 컴포넌트 언마운트 시 정리
     return () => {

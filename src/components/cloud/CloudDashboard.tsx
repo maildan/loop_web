@@ -355,7 +355,7 @@ export function CloudDashboard() {
                           fontWeight: 'bold'
                         }}
                         itemStyle={{ color: chartColors.tooltipText }}
-                        formatter={(value: any, name: any) => [`${value}건`, name]}
+                        formatter={(value: number | string, name: string) => [`${value}건`, name]}
                       />
                       <Area
                         type="monotone"
@@ -430,7 +430,7 @@ export function CloudDashboard() {
                           itemStyle={{
                             color: isDarkMode ? '#e2e8f0' : '#334155'
                           }}
-                          formatter={(value: any, name: any) => [`${value}건 (${((value / (stats?.typeDistribution ?? []).reduce((sum, item) => sum + item.value, 1)) * 100).toFixed(1)}%)`, name]}
+                          formatter={(value: number, name: string) => [`${value}건 (${((value / (stats?.typeDistribution ?? []).reduce((sum, item) => sum + item.value, 1)) * 100).toFixed(1)}%)`, name]}
                         />
                       </PieChart>
                     </ResponsiveContainer>
@@ -569,7 +569,7 @@ export function CloudDashboard() {
                           borderRadius: '8px',
                           color: chartColors.tooltipText
                         }}
-                        formatter={(value: any, name: any) => [`${value}건`, name === 'words' ? '단어 수' : '문서 수']}
+                        formatter={(value: number | string, name: string) => [`${value}건`, name === 'words' ? '단어 수' : '문서 수']}
                       />
                       <Area
                         type="monotone"

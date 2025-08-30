@@ -9,15 +9,22 @@ export function AuthCallbackPage() {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
+    const userParam = params.get('user');
 
-    if (token) {
+    if (token && userParam) {
       localStorage.setItem('token', token);
-      // Optionally, you could also fetch user info here with the token
-      // and store it in local storage or a state management library.
+      try {
+        const user = JSON.parse(decodeURIComponent(userParam));
+        localStorage.setItem('user', JSON.stringify(user));
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+        navigate('/login');
+        return;
+      }
       navigate('/cloud');
     } else {
-      // Handle error case where token is not present
-      console.error('Authentication failed: No token received.');
+      // Handle error case where token or user is not present
+      console.error('Authentication failed: No token or user data received.');
       navigate('/login');
     }
   }, [location, navigate]);

@@ -1,5 +1,11 @@
 import React from 'react';
 
+// Type definitions for Performance API entries to avoid using 'any'
+interface LayoutShift extends PerformanceEntry {
+  value: number;
+  hadRecentInput: boolean;
+}
+
 // 성능 측정 유틸리티
 export class PerformanceMonitor {
   private static instance: PerformanceMonitor;
@@ -30,7 +36,6 @@ export class PerformanceMonitor {
     
     // 개발 환경에서만 로그 출력
     if (process.env.NODE_ENV === 'development') {
-      console.log(`⏱️ ${name}: ${duration.toFixed(2)}ms`);
     }
 
     return duration;
@@ -44,22 +49,19 @@ export class PerformanceMonitor {
     new PerformanceObserver((entryList) => {
       const entries = entryList.getEntries();
       const lastEntry = entries[entries.length - 1];
-      console.log('🎯 LCP:', lastEntry.startTime);
     }).observe({ entryTypes: ['largest-contentful-paint'] });
 
     // FID (First Input Delay)
     new PerformanceObserver((entryList) => {
       for (const entry of entryList.getEntries()) {
-        const firstInputEntry = entry as any;
-        console.log('👆 FID:', firstInputEntry.processingStart - firstInputEntry.startTime);
+        const firstInputEntry = entry as PerformanceEntry & { processingStart: DOMHighResTimeStamp };
       }
     }).observe({ entryTypes: ['first-input'] });
 
     // CLS (Cumulative Layout Shift)
     new PerformanceObserver((entryList) => {
       for (const entry of entryList.getEntries()) {
-        if (!(entry as any).hadRecentInput) {
-          console.log('📐 CLS:', (entry as any).value);
+        if (!(entry as LayoutShift).hadRecentInput) {
         }
       }
     }).observe({ entryTypes: ['layout-shift'] });
@@ -69,12 +71,7 @@ export class PerformanceMonitor {
   measureMemoryUsage(): void {
     if (typeof window === 'undefined' || !('memory' in performance)) return;
 
-    const memory = (performance as any).memory;
-    console.log('💾 Memory Usage:', {
-      used: Math.round(memory.usedJSHeapSize / 1048576),
-      total: Math.round(memory.totalJSHeapSize / 1048576),
-      limit: Math.round(memory.jsHeapSizeLimit / 1048576)
-    });
+    const memory = (performance as Performance & { memory: { jsHeapSizeLimit: number; totalJSHeapSize: number; usedJSHeapSize: number; } }).memory;
   }
 }
 

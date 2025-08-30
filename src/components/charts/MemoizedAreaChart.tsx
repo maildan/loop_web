@@ -72,7 +72,7 @@ export const MemoizedAreaChart = React.memo<MemoizedAreaChartProps>(
               fontWeight: 'bold' 
             }}
             itemStyle={{ color: chartColors.tooltipText }}
-            formatter={(value: any) => [`${value}건`, name]}
+            formatter={(value: number | string) => [`${value}건`, name]}
           />
           <Area 
             type="monotone" 

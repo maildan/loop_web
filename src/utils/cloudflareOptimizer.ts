@@ -52,7 +52,6 @@ class CloudFlareOptimizer {
     this.setupResourceHints();
     this.setupPerformanceMonitoring();
     this.setupCacheMonitoring();
-    this.optimizeImages();
   }
 
   /**
@@ -275,7 +274,7 @@ class CloudFlareOptimizer {
   /**
    * 디버그 로그
    */
-  private log(message: string, data?: any): void {
+  private log(message: string, data?: unknown): void {
     if (this.config.debug) {
       console.log(`[CloudFlare] ${message}`, data || '');
     }
