@@ -153,7 +153,11 @@ export function CloudDashboard() {
         const monthlyWords = userData.goal_monthly_words || 0;
         setGoals({ weeklyDocs, monthlyWords });
         setEditedGoals({ weeklyDocs, monthlyWords });
-        setDocuments(docsData);
+                const transformedDocs = docsData.map((doc: Document) => ({
+          ...doc,
+          lastModified: new Date(doc.lastModified),
+        }));
+        setDocuments(transformedDocs);
         setStats(statsData);
       } catch (err) {
         setError('Failed to load dashboard data.');
