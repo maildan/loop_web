@@ -6,3 +6,4 @@ export * from './utils/ScrollToTop';
 export * from './auth/LoginPage';
 export * from './auth/RegisterPage';
 export * from './auth/AuthCallbackPage';
+export * from './project';

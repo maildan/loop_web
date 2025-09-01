@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 interface ThemeContextType {
+  theme: string;
   isDarkMode: boolean;
   toggleTheme: () => void;
 }
@@ -20,6 +21,7 @@ interface ThemeProviderProps {
 }
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
+  const [theme, setTheme] = useState('light');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const lastToggleTime = useRef(0);
   const cooldownPeriod = 1000; // 1 second cooldown
@@ -32,10 +34,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     let isDark = false;
     if (savedTheme === 'dark') {
       isDark = true;
+      setTheme('dark');
     } else if (savedTheme === 'light') {
       isDark = false;
+      setTheme('light');
     } else {
       isDark = prefersDark;
+      setTheme(isDark ? 'dark' : 'light');
       // 시스템 설정 기반으로 초기 테마 저장
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
     }
@@ -79,6 +84,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
+    setTheme(newDarkMode ? 'dark' : 'light');
     
     if (newDarkMode) {
       document.documentElement.classList.add('dark');
@@ -90,7 +96,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   };
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, isDarkMode, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

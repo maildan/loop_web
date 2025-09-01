@@ -18,7 +18,33 @@ interface DocumentViewerProps {
 }
 
 export function DocumentViewer({ document }: DocumentViewerProps) {
-  const { isDarkMode } = useTheme();
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
+
+  const chartColors = {
+    tooltipBg: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)',
+    tooltipBorder: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)',
+    tooltipText: isDarkMode ? '#ffffff' : '#1e293b',
+    pie: {
+      segment: [
+        isDarkMode ? '#4285F4' : '#1a73e8', // 서론
+        isDarkMode ? '#34A853' : '#0f7b0f', // 본론
+        isDarkMode ? '#FBBC05' : '#e37400', // 결론
+      ],
+      density: [
+        isDarkMode ? '#FF6B6B' : '#e74c3c', // 높음
+        isDarkMode ? '#4ECDC4' : '#16a085', // 보통
+        isDarkMode ? '#45B7D1' : '#3498db', // 낮음
+      ],
+      readability: [
+        isDarkMode ? '#2ECC71' : '#27ae60', // 우수
+        isDarkMode ? '#F39C12' : '#f39c12', // 보통
+        isDarkMode ? '#E74C3C' : '#c0392b', // 개선필요
+      ],
+      stroke: isDarkMode ? '#333' : '#1e293b',
+    },
+    copyStatus: isDarkMode ? 'text-green-400' : 'text-green-600',
+  };
   const [copyStatus, setCopyStatus] = useState<string | null>(null);
   
   // 문서 세그먼트 분석 - 고정 데이터 (서론 20%, 본론 60%, 결론 20%)
@@ -253,36 +279,28 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
                   >
                     {documentSegments.map((entry, index) => {
                       const colors = [
-                        isDarkMode ? '#4285F4' : '#1a73e8',  // 서론
-                        isDarkMode ? '#34A853' : '#0f7b0f',  // 본론  
-                        isDarkMode ? '#FBBC05' : '#e37400',  // 결론
+                        chartColors.pie.segment[0],
+                        chartColors.pie.segment[1],
+                        chartColors.pie.segment[2],
                       ];
                       return (
                         <Cell 
                           key={`segment-cell-${index}`} 
                           fill={colors[index]} 
-                          stroke={isDarkMode ? '#333' : '#1e293b'}
+                          stroke={chartColors.pie.stroke}
                           strokeWidth={isDarkMode ? 2 : 3}
                         />
                       );
                     })}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ 
-                      background: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)', 
-                      border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)'}`, 
+                    contentStyle={{
+                      background: chartColors.tooltipBg,
+                      border: `1px solid ${chartColors.tooltipBorder}`,
                       borderRadius: '8px',
-                      boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.6)' : '0 4px 16px rgba(0, 0, 0, 0.12)',
-                      color: isDarkMode ? '#ffffff' : '#1e293b'
+                      color: chartColors.tooltipText
                     }}
-                    labelStyle={{ 
-                      color: isDarkMode ? '#ffffff' : '#1e293b', 
-                      fontWeight: '600' 
-                    }}
-                    itemStyle={{ 
-                      color: isDarkMode ? '#e2e8f0' : '#334155' 
-                    }}
-                    formatter={(value: number, name: string) => [`${value}%`, name]}
+                    formatter={(value: number, name:string) => [`${value}%`, name]}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -338,36 +356,28 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
                       { name: '낮음', value: 15 },
                     ].map((entry, index) => {
                       const colors = [
-                        isDarkMode ? '#FF6B6B' : '#e74c3c',  // 높음
-                        isDarkMode ? '#4ECDC4' : '#16a085',  // 보통  
-                        isDarkMode ? '#45B7D1' : '#3498db',  // 낮음
+                        chartColors.pie.density[0],
+                        chartColors.pie.density[1],
+                        chartColors.pie.density[2],
                       ];
                       return (
                         <Cell 
                           key={`density-cell-${index}`} 
                           fill={colors[index]} 
-                          stroke={isDarkMode ? '#333' : '#1e293b'}
+                          stroke={chartColors.pie.stroke}
                           strokeWidth={isDarkMode ? 2 : 3}
                         />
                       );
                     })}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ 
-                      background: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)', 
-                      border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)'}`, 
+                    contentStyle={{
+                      background: chartColors.tooltipBg,
+                      border: `1px solid ${chartColors.tooltipBorder}`,
                       borderRadius: '8px',
-                      boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.6)' : '0 4px 16px rgba(0, 0, 0, 0.12)',
-                      color: isDarkMode ? '#ffffff' : '#1e293b'
+                      color: chartColors.tooltipText
                     }}
-                    labelStyle={{ 
-                      color: isDarkMode ? '#ffffff' : '#1e293b', 
-                      fontWeight: '600' 
-                    }}
-                    itemStyle={{ 
-                      color: isDarkMode ? '#e2e8f0' : '#334155' 
-                    }}
-                    formatter={(value: number, name: string) => [`${value}%`, name]}
+                    formatter={(value: number, name:string) => [`${value}%`, name]}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -423,36 +433,28 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
                       { name: '개선필요', value: 10 },
                     ].map((entry, index) => {
                       const colors = [
-                        isDarkMode ? '#2ECC71' : '#27ae60',  // 우수
-                        isDarkMode ? '#F39C12' : '#f39c12',  // 보통  
-                        isDarkMode ? '#E74C3C' : '#c0392b',  // 개선필요
+                        chartColors.pie.readability[0],
+                        chartColors.pie.readability[1],
+                        chartColors.pie.readability[2],
                       ];
                       return (
                         <Cell 
                           key={`readability-cell-${index}`} 
                           fill={colors[index]} 
-                          stroke={isDarkMode ? '#333' : '#1e293b'}
+                          stroke={chartColors.pie.stroke}
                           strokeWidth={isDarkMode ? 2 : 3}
                         />
                       );
                     })}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ 
-                      background: isDarkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.98)', 
-                      border: `1px solid ${isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)'}`, 
+                    contentStyle={{
+                      background: chartColors.tooltipBg,
+                      border: `1px solid ${chartColors.tooltipBorder}`,
                       borderRadius: '8px',
-                      boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.6)' : '0 4px 16px rgba(0, 0, 0, 0.12)',
-                      color: isDarkMode ? '#ffffff' : '#1e293b'
+                      color: chartColors.tooltipText
                     }}
-                    labelStyle={{ 
-                      color: isDarkMode ? '#ffffff' : '#1e293b', 
-                      fontWeight: '600' 
-                    }}
-                    itemStyle={{ 
-                      color: isDarkMode ? '#e2e8f0' : '#334155' 
-                    }}
-                    formatter={(value: number, name: string) => [`${value}%`, name]}
+                    formatter={(value: number, name:string) => [`${value}%`, name]}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -473,7 +475,7 @@ Loop는 혁신적인 협업 도구로, 다양한 메신저와 협업 도구를 �
                 복사
               </Button>
               {copyStatus && (
-                <span className="text-sm text-green-600 font-medium">
+                <span className={`text-sm ${chartColors.copyStatus} font-medium`}>
                   {copyStatus}
                 </span>
               )}

@@ -19,7 +19,8 @@ import {
   RegisterPage,
   PrivacyPolicy,
   TermsOfService,
-  AuthCallbackPage
+  AuthCallbackPage,
+  ProjectWorkspace
 } from './components';
 
 // Main Landing Page Component
@@ -136,6 +137,7 @@ function AppWithLoadingBar() {
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-of-service" element={<TermsOfServicePage />} />
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route path="/project/:projectId" element={<ProjectWorkspace />} />
         </Routes>
       </div>
     </>
