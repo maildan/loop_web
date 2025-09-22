@@ -24,8 +24,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
     { href: '/', label: '홈', id: 'nav-home' },
     { href: '/#about', label: 'Loop', id: 'nav-about' },
     { href: '/#services', label: '서비스', id: 'nav-services' },
-    { href: '/#download', label: '다운로드', id: 'nav-download' },
-    { href: '/cloud', label: '클라우드', id: 'nav-cloud' },
+    { href: '/#download', label: '다운로드', id: 'nav-download' }
   ];
 
   return (
@@ -34,7 +33,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="#home" className="flex items-center space-x-2">
+            <a href="/#home" className="flex items-center space-x-2">
               <span className="font-bold text-2xl">Loop</span>
             </a>
           </div>
@@ -44,7 +43,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
             {navItems.map((item) => {
               // Check if the link is a hash link (anchor) on the current page
               const isHashLink = item.href.includes('#') && item.href.startsWith('/');
-              
+
               // Special handling for cloud link
               if (item.href === '/cloud') {
                 return (
@@ -57,7 +56,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
                   </button>
                 );
               }
-              
+
               if (isHashLink && location.pathname === '/') {
                 // For hash links on the homepage
                 return (
@@ -118,19 +117,16 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
               aria-label="Toggle menu"
             >
               <span
-                className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${
-                  isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
-                }`}
+                className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''
+                  }`}
               />
               <span
-                className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${
-                  isMenuOpen ? 'opacity-0' : ''
-                }`}
+                className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''
+                  }`}
               />
               <span
-                className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${
-                  isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
-                }`}
+                className={`block h-0.5 w-6 bg-foreground transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
+                  }`}
               />
             </button>
           </div>
@@ -143,7 +139,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
               {navItems.map((item) => {
                 // Check if the link is a hash link (anchor) on the current page
                 const isHashLink = item.href.includes('#') && item.href.startsWith('/');
-                
+
                 // Special handling for cloud link
                 if (item.href === '/cloud') {
                   return (
@@ -159,7 +155,7 @@ export const Navigation: React.FC<NavigationProps> = ({ children }) => {
                     </button>
                   );
                 }
-                
+
                 if (isHashLink && location.pathname === '/') {
                   // For hash links on the homepage
                   return (

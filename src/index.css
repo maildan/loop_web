@@ -46,6 +46,12 @@ html, body {
   transition: background-color 0.3s ease-in, color 0.3s ease-in;
 }
 
+/* 고정 네비게이션 높이만큼 앵커 스크롤 보정 */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem; /* Navigation 높이(h-16) 고려 */
+}
+
 body {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.5;

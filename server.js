@@ -4,7 +4,7 @@ const compression = require('compression');
 const helmet = require('helmet');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
 // 보안 헤더 설정
@@ -26,8 +26,8 @@ app.use(compression());
 
 // 헬스체크 엔드포인트
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'healthy', 
+  res.status(200).json({
+    status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage()

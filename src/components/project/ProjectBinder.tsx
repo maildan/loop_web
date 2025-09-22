@@ -48,12 +48,13 @@ const BinderItem: React.FC<BinderItemProps> = ({ children, icon: Icon, isSelecte
 );
 
 interface ProjectBinderProps {
+  projectName: string;
   projectData: ProjectStructure | null;
   selectedItem: string | null;
   onSelectItem: (id: string) => void;
 }
 
-export const ProjectBinder: React.FC<ProjectBinderProps> = ({ projectData, selectedItem, onSelectItem }) => {
+export const ProjectBinder: React.FC<ProjectBinderProps> = ({ projectName, projectData, selectedItem, onSelectItem }) => {
   const synopsisIcons: { [key: string]: React.ElementType } = {
     outline: FileText,
     timeline: Clock,
@@ -61,7 +62,7 @@ export const ProjectBinder: React.FC<ProjectBinderProps> = ({ projectData, selec
   };
   return (
     <div className="p-2 h-full">
-      <h2 className="text-lg font-bold p-2 mb-2">{projectData?.name || '프로젝트'}</h2>
+      <h2 className="text-lg font-bold p-2 mb-2">{projectName || '프로젝트'}</h2>
             {!projectData ? (
         <div className="flex items-center justify-center h-full">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -69,7 +70,7 @@ export const ProjectBinder: React.FC<ProjectBinderProps> = ({ projectData, selec
       ) : (
         <nav className="space-y-2">
           <BinderSection title="캐릭터" icon={Users}>
-            {projectData.characters.map(char => (
+            {projectData.characters.map((char: any) => (
               <BinderItem 
                 key={char.id}
                 isSelected={selectedItem === char.id}
@@ -80,7 +81,7 @@ export const ProjectBinder: React.FC<ProjectBinderProps> = ({ projectData, selec
             ))}
           </BinderSection>
           <BinderSection title="메모" icon={StickyNote}>
-            {projectData.memos.map(memo => (
+            {projectData.memos.map((memo: any) => (
               <BinderItem 
                 key={memo.id}
                 isSelected={selectedItem === memo.id}
@@ -91,7 +92,7 @@ export const ProjectBinder: React.FC<ProjectBinderProps> = ({ projectData, selec
             ))}
           </BinderSection>
           <BinderSection title="시놉시스" icon={Map}>
-            {projectData.synopses.map(item => (
+            {projectData.synopses.map((item: any) => (
               <BinderItem 
                 key={item.id} 
                 icon={synopsisIcons[item.type]}
@@ -103,7 +104,7 @@ export const ProjectBinder: React.FC<ProjectBinderProps> = ({ projectData, selec
             ))}
           </BinderSection>
           <BinderSection title="챕터" icon={Book}>
-            {projectData.chapters.map(chapter => (
+            {projectData.chapters.map((chapter: any) => (
               <BinderItem 
                 key={chapter.id}
                 isSelected={selectedItem === chapter.id}

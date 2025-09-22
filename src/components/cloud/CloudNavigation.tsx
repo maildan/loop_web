@@ -5,7 +5,7 @@ import { Button } from '../ui/Button';
 import { Sun, Moon, Home, User, Settings, LogOut } from 'lucide-react';
 import { Avatar } from '../ui/Avatar';
 import { useTheme } from '../ui/ThemeProvider';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
 import { logout } from '../../services/auth';
 import { 
   DropdownMenu, 
@@ -17,7 +17,7 @@ import {
 export function CloudNavigation() {
   const { isDarkMode, toggleTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   
   console.log('🔍 CloudNavigation user:', user);
   const navigate = useNavigate();
@@ -61,13 +61,14 @@ export function CloudNavigation() {
                 {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
               
+              {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar 
-                    src={user?.profilePictureUrl || "https://randomuser.me/api/portraits/men/21.jpg"} 
-                    alt={user?.name || "사용자 프로필"}
+                    src={user.profile_picture_url || "https://randomuser.me/api/portraits/men/21.jpg"} 
+                    alt={user.name || "사용자 프로필"}
                     size="sm"
-                    fallback={user?.name || "사용자"}
+                    fallback={user.name || "사용자"}
                     className="cursor-pointer"
                   />
                 </DropdownMenuTrigger>
@@ -76,16 +77,17 @@ export function CloudNavigation() {
                     <User className="h-4 w-4 mr-2" />
                     프로필 설정
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => window.location.href = "/account"}>
+                  <DropdownMenuItem onClick={() => window.location.href = "/settings"}>
                     <Settings className="h-4 w-4 mr-2" />
                     계정 관리
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => logout()}>
+                  <DropdownMenuItem onClick={logout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     로그아웃
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              )}
             </div>
           </div>
         </div>
@@ -117,15 +119,16 @@ export function CloudNavigation() {
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
             
+            {user && (
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="flex items-center space-x-2 cursor-pointer">
-                  <span className="text-sm text-muted-foreground">{user?.name || '사용자'}님</span>
+                  <span className="text-sm text-muted-foreground">{user.name || '사용자'}님</span>
                   <Avatar 
-                    src={user?.profilePictureUrl || "https://randomuser.me/api/portraits/men/21.jpg"} 
-                    alt={user?.name || "사용자 프로필"}
+                    src={user.profile_picture_url || "https://randomuser.me/api/portraits/men/21.jpg"} 
+                    alt={user.name || "사용자 프로필"}
                     size="sm"
-                    fallback={user?.name || "사용자"}
+                    fallback={user.name || "사용자"}
                   />
                 </div>
               </DropdownMenuTrigger>
@@ -134,16 +137,17 @@ export function CloudNavigation() {
                   <User className="h-4 w-4 mr-2" />
                   프로필 설정
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => window.location.href = "/account"}>
+                <DropdownMenuItem onClick={() => window.location.href = "/settings"}>
                   <Settings className="h-4 w-4 mr-2" />
                   계정 관리
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => logout()}>
+                <DropdownMenuItem onClick={logout}>
                   <LogOut className="h-4 w-4 mr-2" />
                   로그아웃
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            )}
           </div>
         </div>
       </Container>

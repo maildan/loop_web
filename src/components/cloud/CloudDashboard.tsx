@@ -1,89 +1,108 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container } from '../ui/Container';
-import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { PlusCircle } from 'lucide-react';
-import { Toaster, toast } from 'sonner';
-
-// Define the Project type
-interface Project {
-  id: string;
-  name: string;
-  lastModified: string;
-  description: string;
-}
-
-// Mock data for projects
-const mockProjects: Project[] = [
-  { id: 'proj-1', name: '나의 첫 소설: 시간 여행자', lastModified: '2024-08-15', description: '시간을 넘나드는 한 과학자의 모험을 다룬 SF 소설입니다.' },
-  { id: 'proj-2', name: '판타지 세계관 설정집', lastModified: '2024-08-10', description: '드래곤과 마법이 공존하는 새로운 세계, 아르카디아의 모든 것.' },
-  { id: 'proj-3', name: '단편 시나리오: 여름밤의 꿈', lastModified: '2024-07-22', description: '한여름 밤, 두 남녀의 엇갈린 사랑 이야기를 담은 단편 영화 시나리오.' },
-];
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { motion } from 'framer-motion';
+import { toast } from 'sonner';
+import { ProjectCard } from './ProjectCard';
+import { useAuth } from '@/contexts/AuthContext';
+import { getProjects, Project } from '@/services/projects';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function CloudDashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  const { token } = useAuth();
 
   useEffect(() => {
-    // In a real app, you would fetch projects from an API
-    // For now, we use mock data
-    setTimeout(() => {
-      setProjects(mockProjects);
-      setIsLoading(false);
-    }, 500);
-  }, []);
+    const fetchProjects = async () => {
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+      try {
+        setIsLoading(true);
+        const fetchedProjects = await getProjects();
+        setProjects(fetchedProjects);
+      } catch (error) {
+        toast.error('프로젝트를 불러오는 데 실패했습니다.');
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const handleProjectClick = (projectId: string) => {
-    navigate(`/project/${projectId}`);
+    fetchProjects();
+  }, [token]);
+
+  const moveCard = (dragIndex: number, hoverIndex: number) => {
+    const dragCard = projects[dragIndex];
+    setProjects(prevProjects => {
+      const newProjects = [...prevProjects];
+      newProjects.splice(dragIndex, 1);
+      newProjects.splice(hoverIndex, 0, dragCard);
+      return newProjects;
+    });
   };
 
-  const handleCreateNewProject = () => {
-    // Logic to create a new project will be implemented later
-    toast.info('새 프로젝트 만들기 기능은 곧 추가될 예정입니다.');
+  const handleCardClick = (projectId: string) => {
+    navigate(`/project/${projectId}`);
   };
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="p-4 sm:p-6 md:p-8">
+        <header className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">내 프로젝트</h1>
+        </header>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex flex-col space-y-3">
+              <Skeleton className="h-[125px] w-full rounded-xl" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Toaster richColors position="top-center" />
-      <Container className="py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">내 프로젝트</h1>
-          <Button onClick={handleCreateNewProject}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            새 프로젝트 만들기
-          </Button>
-        </div>
-        
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <Card 
-              key={project.id} 
-              className="cursor-pointer hover:shadow-lg transition-shadow duration-200 flex flex-col"
-              onClick={() => handleProjectClick(project.id)}
-            >
-              <CardHeader>
-                <CardTitle>{project.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <p className="text-muted-foreground text-sm">{project.description}</p>
-              </CardContent>
-              <div className="p-6 pt-0 text-xs text-muted-foreground">
-                마지막 수정: {project.lastModified}
-              </div>
-            </Card>
+    <DndProvider backend={HTML5Backend}>
+      <div className="p-4 sm:p-6 md:p-8">
+        <header className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">내 프로젝트</h1>
+        </header>
+
+        <motion.div 
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {projects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              index={index}
+              id={project.id}
+              name={project.name}
+              lastModified={new Date(project.updatedAt).toLocaleDateString('ko-KR')}
+              moveCard={moveCard}
+              onClick={() => handleCardClick(project.id)}
+            />
           ))}
-        </div>
-      </Container>
-    </div>
+        </motion.div>
+
+        {!isLoading && projects.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 dark:text-gray-400">아직 참여중인 프로젝트가 없습니다.</p>
+          </div>
+        )}
+      </div>
+    </DndProvider>
   );
 }

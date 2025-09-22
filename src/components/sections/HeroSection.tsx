@@ -30,11 +30,10 @@ export const HeroSection: React.FC = () => {
           <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
             <div className="text-lg font-medium text-muted-foreground">지원 플랫폼:</div>
             <div className="flex flex-wrap justify-center gap-6">
-              <span className="text-sm bg-muted px-3 py-1 rounded-full">Google Docs</span>
-              <span className="text-sm bg-muted px-3 py-1 rounded-full">Slack</span>
-              <span className="text-sm bg-muted px-3 py-1 rounded-full">Notion</span>
-              <span className="text-sm bg-muted px-3 py-1 rounded-full">Discord</span>
-              <span className="text-sm bg-muted px-3 py-1 rounded-full">Teams</span>
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">Windows</span>
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">MacOS</span>
+              <span className="text-sm bg-muted px-3 py-1 rounded-full">추후 준비 중..</span>
+              
             </div>
           </div>
         </div>

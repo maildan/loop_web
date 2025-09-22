@@ -48,23 +48,23 @@ export const AboutSection: React.FC = () => {
 
   const features = [
     {
-      title: 'AI 기반 분석',
-      description: '글의 구조, 가독성, 감정선까지 분석하여 더 나은 이야기를 만들도록 돕습니다.',
-      icon: '📊',
+      title: '이야기 구조 분석',
+      description: '더 깊고 설득력 있는 스토리. 구조·흐름·감정선을 분석해 전개를 제안합니다.',
+      icon: '🧩',
     },
     {
-      title: '똑똑한 AI 에이전트',
-      description: '자료 조사, 아이디어 구체화, 교정 및 교열까지 AI가 함께합니다.',
+      title: 'AI 창작 파트너',
+      description: '발상부터 교정까지 함께하는 지능형 도우미로 시간은 단축하고 퀄은 업.',
       icon: '🤖',
     },
     {
-      title: '집중을 위한 디자인',
-      description: '불필요한 모든 것을 덜어내고 오직 글쓰기에만 몰입할 수 있는 환경을 제공합니다.',
+      title: '몰입형 글쓰기 환경',
+      description: '방해 요소 최소화. 오직 이야기와 문장에만 집중할 수 있는 간결한 UI.',
       icon: '✍️',
     },
     {
       title: '강력한 데스크톱 성능',
-      description: 'Electron 기반으로 제작되어 어떤 운영체제에서도 빠르고 안정적인 성능을 보장합니다.',
+      description: 'Electron 기반 크로스플랫폼. Windows·macOS·Linux에서 빠르고 안정적으로.',
       icon: '💻',
     },
   ];
@@ -129,9 +129,11 @@ export const AboutSection: React.FC = () => {
             </div>
           </div>
           <div className="relative">
-            <div className="aspect-square bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center">
-              <div className="text-6xl">🔄</div>
-            </div>
+            <div 
+              className="aspect-square rounded-2xl flex items-center justify-center bg-cover bg-center"
+              style={{ backgroundImage: 'url(/banner.jpg)' }}
+              aria-label="Loop banner"
+            />
           </div>
         </div>
       </Container>

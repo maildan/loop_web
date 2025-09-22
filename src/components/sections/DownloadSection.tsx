@@ -3,7 +3,7 @@ import { Container } from '../ui/Container';
 import { Section } from '../ui/Section';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { WindowsIcon, MacOSIcon, UbuntuIcon } from '../../assets/icons';
+import { Windows11Icon, MacOSIcon, UbuntuIcon } from '../../assets/icons';
 
 export const DownloadSection: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -18,12 +18,12 @@ export const DownloadSection: React.FC = () => {
         {
           id: 'novel-windows',
           os: 'Windows',
-          icon: WindowsIcon,
-          iconColor: 'text-blue-500',
+          icon: Windows11Icon,
+          iconColor: 'text-slate-900 dark:text-white',
           version: 'v2.1.0',
-          size: '198 MB',
+          size: '400 MB',
           downloadUrl: '#',
-          requirements: 'Windows 10 이상',
+          requirements: 'Windows 11 이상',
           bgGradient: 'from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20',
           borderColor: 'border-blue-200 dark:border-blue-800',
           released: true
@@ -34,7 +34,7 @@ export const DownloadSection: React.FC = () => {
           icon: MacOSIcon,
           iconColor: 'text-gray-600',
           version: 'v2.1.0',
-          size: '185 MB',
+          size: '385 MB',
           downloadUrl: '#',
           requirements: 'macOS 11.0 이상',
           bgGradient: 'from-gray-50 to-slate-50 dark:from-gray-950/20 dark:to-slate-950/20',
@@ -104,8 +104,8 @@ export const DownloadSection: React.FC = () => {
                 
                 <CardHeader className="text-center pb-4 relative z-10">
                   <div className="mb-6 mt-15 -ml-3">
-                    <div className={`inline-flex p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg group-hover:shadow-xl transition-all duration-300 ${download.iconColor}`}>
-                      <download.icon size={48} />
+                    <div className={`inline-flex p-6 rounded-2xl bg-white dark:bg-slate-800 shadow-lg group-hover:shadow-xl transition-all duration-300 ${download.iconColor} outline-none ring-0` }>
+                      {React.createElement(download.icon as any, { className: 'w-12 h-12', 'aria-hidden': true })}
                     </div>
                   </div>
                   <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
@@ -167,32 +167,7 @@ export const DownloadSection: React.FC = () => {
         </div>
 
         {/* Additional Info */}
-        <div className="mt-20 text-center">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-white/80 to-slate-50/80 dark:from-slate-800/80 dark:to-slate-900/80 backdrop-blur-sm rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-xl">
-              <h4 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">
-                모든 플랫폼에서 동일한 경험
-              </h4>
-              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                Loop Novel은 Windows, macOS, Linux 모든 플랫폼에서 일관된 사용 경험을 제공합니다. 어떤 환경에서도 동일한 기능을 사용할 수 있습니다.
-              </p>
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>무료 평가판</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span>정기 업데이트</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <span>기술 지원</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      
       </Container>
     </Section>
   );

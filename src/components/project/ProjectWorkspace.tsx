@@ -7,13 +7,19 @@ import {
 import { ProjectBinder, ProjectEditor, ProjectInspector } from './';
 import { getProjectDetails, ProjectStructure } from '../../services/projects';
 
-const ProjectWorkspace: React.FC = () => {
+const ProjectWorkspace: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
   const [projectData, setProjectData] = React.useState<ProjectStructure | null>(null);
 
   React.useEffect(() => {
-    getProjectDetails().then(setProjectData);
-  }, []);
+    const fetchProjectData = async () => {
+      if (projectId) {
+        const data = await getProjectDetails(projectId);
+        setProjectData(data);
+      }
+    };
+    fetchProjectData();
+  }, [projectId]);
 
   const handleSelectItem = (id: string) => {
     setSelectedItem(id);
@@ -26,9 +32,10 @@ const ProjectWorkspace: React.FC = () => {
         <Panel defaultSize={20} minSize={15} maxSize={30}>
           <div className="h-full border-r overflow-y-auto">
             <ProjectBinder 
+              projectName={projectData?.name || ''}
               projectData={projectData}
-              onSelectItem={handleSelectItem} 
-              selectedItem={selectedItem} 
+              selectedItem={selectedItem}
+              onSelectItem={handleSelectItem}
             />
           </div>
         </Panel>
