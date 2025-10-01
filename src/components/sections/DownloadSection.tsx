@@ -1,94 +1,23 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container } from '../ui/Container';
 import { Section } from '../ui/Section';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Windows11Icon, MacOSIcon, UbuntuIcon } from '../../assets/icons';
-
-type ReleaseAsset = { name: string; url: string; size?: number; content_type?: string };
-
-async function fetchLatestReleaseViaProxy(): Promise<{ version: string; assets: ReleaseAsset[] } | null> {
-  const res = await fetch('/api/releases/latest');
-  if (!res.ok) return null;
-  const data = await res.json();
-  return { version: data.version, assets: data.assets || [] };
-}
-
-async function fetchLatestReleaseDirect(): Promise<{ version: string; assets: ReleaseAsset[] } | null> {
-  const gh = await fetch('https://api.github.com/repos/maildan/loop/releases/latest', {
-    headers: { Accept: 'application/vnd.github+json' }
-  });
-  if (!gh.ok) return null;
-  const data = await gh.json();
-  const assets: ReleaseAsset[] = (data.assets || []).map((a: any) => ({ name: a.name, url: a.browser_download_url }));
-  return { version: data.tag_name, assets };
-}
-
-function detectClient() {
-  const ua = (typeof navigator !== 'undefined' ? navigator.userAgent : '').toLowerCase();
-  const platform = (typeof navigator !== 'undefined' ? navigator.platform : '' as any)?.toString().toLowerCase() || '';
-  const isMac = /mac/.test(platform) || /mac os/.test(ua) || /darwin/.test(ua);
-  const isWin = /win/.test(platform) || /windows/.test(ua);
-  const isLinux = /linux|x11|ubuntu/.test(platform) || /linux|x11|ubuntu/.test(ua);
-  const isArm = /arm|aarch64|apple/.test(ua);
-  const isX64 = /x86_64|win64|x64|amd64|intel/.test(ua);
-  const arch = isArm ? 'arm64' : isX64 ? 'x64' : 'x64';
-  return { isMac, isWin, isLinux, arch };
-}
-
-function buildMatchCombos(os: 'mac' | 'win' | 'linux', arch: 'arm64' | 'x64') {
-  const combos: string[][] = [];
-  if (os === 'mac') {
-    // Prefer DMG first, then ZIP
-    if (arch === 'arm64') {
-      combos.push(['mac', 'arm64', 'dmg'], ['mac', 'arm64', '.dmg']);
-      combos.push(['mac', 'arm64', 'zip'], ['mac', 'arm64']);
-    } else {
-      combos.push(['mac', 'x64', 'dmg'], ['mac', 'intel', 'dmg'], ['dmg', 'mac']);
-      combos.push(['mac', 'x64', 'zip'], ['mac', 'intel', 'zip'], ['zip', 'mac']);
-      combos.push(['mac', 'x64'], ['mac', 'intel']);
-    }
-    combos.push(['mac']);
-  } else if (os === 'win') {
-    // Prefer EXE first, then ZIP
-    combos.push(['win', '.exe'], ['windows', '.exe']);
-    combos.push(['win', 'x64'], ['windows', 'x64']);
-    combos.push(['win', 'zip'], ['windows', 'zip']);
-    combos.push(['win']);
-  } else {
-    combos.push(['linux', 'appimage'], ['linux', 'deb'], ['linux']);
-  }
-  return combos;
-}
-
-function selectAssetUrl(assets: ReleaseAsset[], os: 'mac' | 'win' | 'linux', arch: 'arm64' | 'x64', fallback: string) {
-  if (!assets?.length) return fallback;
-  const lower = assets.map(a => ({ ...a, lower: a.name.toLowerCase() }));
-  for (const combo of buildMatchCombos(os, arch)) {
-    const hit = lower.find(a => combo.every(c => a.lower.includes(c)));
-    if (hit) return hit.url;
-  }
-  return fallback;
-}
+import { fetchLatestRelease, selectAssetForPlatform, detectPlatform, type ReleaseData } from '../../utils/downloadHelper';
 
 export const DownloadSection: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const [release, setRelease] = useState<null | { version: string; assets: ReleaseAsset[] }>(null);
+  const [release, setRelease] = useState<ReleaseData | null>(null);
 
   useEffect(() => {
-    (async () => {
-      const fromProxy = await fetchLatestReleaseViaProxy();
-      if (fromProxy) return setRelease(fromProxy);
-      const fromGh = await fetchLatestReleaseDirect();
-      if (fromGh) return setRelease(fromGh);
-      setRelease(null);
-    })();
+    fetchLatestRelease().then(setRelease);
   }, []);
 
-  const client = useMemo(() => detectClient(), []);
-
-  const pickAssetUrl = (os: 'mac' | 'win' | 'linux', fallback: string) =>
-    selectAssetUrl(release?.assets || [], os, client.arch as 'arm64' | 'x64', fallback);
+  const getAssetUrl = (osType: 'windows' | 'macos' | 'linux', archType: 'arm64' | 'x64', fallback: string) => {
+    if (!release) return fallback;
+    return selectAssetForPlatform(release.assets, { os: osType, arch: archType }) || fallback;
+  };
 
   const downloadData = {
     novel: {
@@ -102,9 +31,9 @@ export const DownloadSection: React.FC = () => {
           os: 'Windows',
           icon: Windows11Icon,
           iconColor: 'text-slate-900 dark:text-white',
-          version: release?.version || 'v2.1.0',
+          version: release?.version || 'v1.1.2',
           size: '400 MB',
-          downloadUrl: pickAssetUrl('win', '#'),
+          downloadUrl: getAssetUrl('windows', 'x64', '#'),
           requirements: 'Windows 11 이상',
           bgGradient: 'from-blue-50/80 to-indigo-50/80 dark:from-blue-950/20 dark:to-indigo-950/20',
           borderColor: 'border-blue-200 dark:border-blue-800',
@@ -117,7 +46,8 @@ export const DownloadSection: React.FC = () => {
           iconColor: 'text-slate-900 dark:text-white',
           version: release?.version || 'v1.1.2',
           size: '685 MB',
-          downloadUrl: pickAssetUrl('mac', '#'),
+          downloadUrl: getAssetUrl('macos', (detectPlatform().arch === 'arm64' ? 'arm64' : 'x64'), '#'),
+          
           requirements: 'macOS 11.0 이상',
           bgGradient: 'from-slate-50/80 to-gray-50/80 dark:from-gray-950/20 dark:to-slate-950/20',
           borderColor: 'border-gray-200 dark:border-gray-800',
@@ -130,7 +60,7 @@ export const DownloadSection: React.FC = () => {
           iconColor: 'text-orange-600',
           version: release?.version || '출시 예정',
           size: '- MB',
-          downloadUrl: pickAssetUrl('linux', '#'),
+          downloadUrl: getAssetUrl('linux', 'x64', '#'),
           requirements: 'Ubuntu 20.04 이상',
           bgGradient: 'from-gray-100/90 to-slate-100/90 dark:from-gray-800/20 dark:to-gray-900/20',
           borderColor: 'border-gray-300 dark:border-gray-700',

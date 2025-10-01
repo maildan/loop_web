@@ -1,78 +1,21 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Container } from '../ui/Container';
 import { Section } from '../ui/Section';
 import { Button } from '../ui/Button';
+import { downloadLatestRelease } from '../../utils/downloadHelper';
 
 export const HeroSection: React.FC = () => {
-  type ReleaseAsset = { name: string; url: string };
   const [downloading, setDownloading] = useState(false);
 
-  const client = useMemo(() => {
-    const ua = (typeof navigator !== 'undefined' ? navigator.userAgent : '').toLowerCase();
-    const platform = (typeof navigator !== 'undefined' ? navigator.platform : '' as any)?.toString().toLowerCase() || '';
-    const isMac = /mac/.test(platform) || /mac os/.test(ua) || /darwin/.test(ua);
-    const isWin = /win/.test(platform) || /windows/.test(ua);
-    const isLinux = /linux|x11|ubuntu/.test(platform) || /linux|x11|ubuntu/.test(ua);
-    const isArm = /arm|aarch64|apple/.test(ua);
-    const isX64 = /x86_64|win64|x64|amd64|intel/.test(ua);
-    const arch = isArm ? 'arm64' : isX64 ? 'x64' : 'x64';
-    return { isMac, isWin, isLinux, arch: arch as 'arm64' | 'x64' };
-  }, []);
-
-  async function fetchLatestRelease(): Promise<{ version: string; assets: ReleaseAsset[] } | null> {
-    try {
-      const res = await fetch('/api/releases/latest');
-      if (res.ok) {
-        const data = await res.json();
-        return { version: data.version, assets: (data.assets || []).map((a: any) => ({ name: a.name, url: a.url || a.browser_download_url })) };
-      }
-    } catch {}
-    try {
-      const gh = await fetch('https://api.github.com/repos/maildan/loop/releases/latest', { headers: { Accept: 'application/vnd.github+json' } });
-      if (!gh.ok) return null;
-      const data = await gh.json();
-      return { version: data.tag_name, assets: (data.assets || []).map((a: any) => ({ name: a.name, url: a.browser_download_url })) };
-    } catch {
-      return null;
-    }
-  }
-
-  function buildCombos(os: 'mac' | 'win' | 'linux', arch: 'arm64' | 'x64') {
-    const combos: string[][] = [];
-    if (os === 'mac') {
-      if (arch === 'arm64') combos.push(['mac', 'arm64', 'dmg'], ['mac', 'arm64', 'zip'], ['mac', 'arm64']);
-      else combos.push(['mac', 'x64', 'dmg'], ['mac', 'intel', 'dmg'], ['mac', 'x64', 'zip'], ['mac', 'intel', 'zip'], ['mac', 'x64'], ['mac', 'intel']);
-      combos.push(['dmg'], ['zip', 'mac'], ['mac']);
-    } else if (os === 'win') {
-      combos.push(['win', '.exe'], ['windows', '.exe'], ['win', 'x64'], ['windows', 'x64'], ['win', 'zip'], ['windows', 'zip'], ['win']);
-    } else {
-      combos.push(['linux', 'appimage'], ['linux', 'deb'], ['linux']);
-    }
-    return combos;
-  }
-
-  function selectAsset(assets: ReleaseAsset[], os: 'mac' | 'win' | 'linux', arch: 'arm64' | 'x64') {
-    const lower = assets.map(a => ({ ...a, lower: a.name.toLowerCase() }));
-    for (const combo of buildCombos(os, arch)) {
-      const hit = lower.find(a => combo.every(c => a.lower.includes(c)));
-      if (hit) return hit.url;
-    }
-    return null;
-  }
-
-  const handleDownload = useCallback(async () => {
+  const handleDownload = async () => {
     if (downloading) return;
     setDownloading(true);
     try {
-      const data = await fetchLatestRelease();
-      if (!data) return;
-      const os: 'mac' | 'win' | 'linux' = client.isMac ? 'mac' : client.isWin ? 'win' : 'linux';
-      const url = selectAsset(data.assets, os, client.arch) || data.assets[0]?.url;
-      if (url) window.open(url, '_blank');
+      await downloadLatestRelease();
     } finally {
       setDownloading(false);
     }
-  }, [client, downloading]);
+  };
 
   return (
     <Section id="home" padding="xl" className="min-h-screen flex items-center">
