@@ -1,0 +1,833 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5% 64.9%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  height: 100%;
+  transition: background-color 0.3s ease-in, color 0.3s ease-in;
+}
+
+/* 고정 네비게이션 높이만큼 앵커 스크롤 보정 */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem; /* Navigation 높이(h-16) 고려 */
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  transition: background-color 0.3s ease-in, color 0.3s ease-in;
+}
+
+/* --- Responsive text wrapping for Korean (and mixed content) --- */
+/* Prevent awkward breaks in Korean while allowing breaks for long latin strings */
+h1, h2, h3, h4, h5, h6, p, span, li, blockquote {
+  word-break: keep-all; /* keep syllables/words together in CJK */
+  overflow-wrap: anywhere; /* still break long unbroken latin strings */
+  line-break: loose; /* better line breaking for Korean */
+  hyphens: manual;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance; /* balance headings across lines when supported */
+  }
+  .text-pretty {
+    text-wrap: pretty; /* improve raggedness of multi-line text */
+  }
+  .korean-wrap {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    line-break: loose;
+    hyphens: manual;
+  }
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Global theme transition animations */
+* {
+  transition: background-color 0.3s ease-in, border-color 0.3s ease-in, color 0.3s ease-in;
+}
+
+/* Specific elements that need smooth transitions */
+div, section, header, nav, main, aside, article, footer,
+button, input, textarea, select, label,
+.card, .btn, .bg-background, .bg-card, .bg-primary, .bg-secondary {
+  transition: background-color 0.3s ease-in, border-color 0.3s ease-in, color 0.3s ease-in;
+}
+
+/* Comprehensive scrollbar styling for better cross-browser compatibility */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 4px;
+  border: 1px solid hsl(var(--border));
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--foreground) / 0.7);
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--muted));
+}
+
+/* Container scrolling improvements */
+.overflow-auto {
+  overflow: auto;
+  max-height: 80vh;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Specific fixes for document content containers */
+.document-content {
+  max-height: 80vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Modal and dialog scrolling */
+.modal-content, .dialog-content {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/* Card content scrolling */
+.card-content {
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+/* List containers */
+.list-container {
+  overflow-y: auto;
+  max-height: 60vh;
+}
+
+/* Recharts chart styling - 기본 크기 유지 */
+.recharts-surface {
+  z-index: 10 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.recharts-wrapper {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+/* ResponsiveContainer 크기 최적화 */
+.recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+}
+
+.recharts-pie {
+  z-index: 15 !important;
+}
+
+.recharts-text {
+  z-index: 20 !important;
+  pointer-events: none !important;
+}
+
+.recharts-pie-label-text {
+  z-index: 25 !important;
+  font-weight: 500 !important;
+  pointer-events: none !important;
+}
+
+/* recharts-dot와 recharts-area-dot 라이트 모드 가시성 개선 */
+.recharts-dot,
+.recharts-area-dot {
+  stroke-width: 3 !important;
+  r: 6 !important;
+}
+
+/* 라이트 모드에서 dot 가시성 개선 */
+body:not(.dark) .recharts-dot,
+body:not(.dark) .recharts-area-dot {
+  stroke: #1e293b !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
+}
+
+/* 다크 모드에서 dot 스타일 */
+.dark .recharts-dot,
+.dark .recharts-area-dot {
+  stroke: #ffffff !important;
+  stroke-width: 2 !important;
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.2)) !important;
+}
+
+/* recharts-sector 라이트 모드 가시성 개선 */
+.recharts-sector {
+  stroke-width: 2 !important;
+}
+
+/* 라이트 모드에서 sector 가시성 개선 */
+body:not(.dark) .recharts-sector {
+  stroke: #1e293b !important;
+  stroke-width: 2 !important;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25)) brightness(0.95) !important;
+}
+
+/* 다크 모드에서 sector 스타일 */
+.dark .recharts-sector {
+  stroke: #374151 !important;
+  stroke-width: 1 !important;
+  filter: brightness(1.1) !important;
+}
+
+/* activeDot 가시성 개선 */
+.recharts-active-dot {
+  stroke-width: 4 !important;
+  r: 8 !important;
+}
+
+/* 라이트 모드에서 activeDot 가시성 개선 */
+body:not(.dark) .recharts-active-dot {
+  stroke: #1e293b !important;
+  stroke-width: 4 !important;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* 다크 모드에서 activeDot 스타일 */
+.dark .recharts-active-dot {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 3px 8px rgba(255, 255, 255, 0.3)) !important;
+}
+
+/* Pie chart cell 가시성 개선 */
+.recharts-pie-sector {
+  stroke-width: 2 !important;
+}
+
+/* 라이트 모드에서 pie sector 가시성 개선 */
+body:not(.dark) .recharts-pie-sector {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+}
+
+/* 다크 모드에서 pie sector 스타일 */
+.dark .recharts-pie-sector {
+  stroke: #1f2937 !important;
+  stroke-width: 2 !important;
+}
+
+/* 차트 제목을 inline으로 만들어 겹침 방지 */
+.chart-title {
+  display: inline-block !important;
+  position: relative !important;
+  z-index: 30 !important;
+}
+
+/* 카드 헤더를 inline으로 개선 */
+.card-header-inline {
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
+  padding: 1rem 1.5rem 0.5rem 1.5rem !important;
+}
+
+/* 카드 콘텐츠 여백 증가 */
+.card-content-expanded {
+  padding: 2.5rem 2rem 2rem 2rem !important;
+  padding-top: 0 !important;
+}
+
+/* 차트 툴팁 테마별 스타일 개선 */
+.recharts-tooltip-wrapper {
+  z-index: 50 !important;
+}
+
+/* 문서유형 분포 차트 전용 스타일 */
+.document-type-distribution-chart .recharts-surface {
+  z-index: 10 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.document-type-distribution-chart .recharts-wrapper {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+.document-type-distribution-chart .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+}
+
+.document-type-distribution-chart .recharts-pie {
+  z-index: 15 !important;
+}
+
+.document-type-distribution-chart .recharts-pie-sector {
+  stroke-width: 2 !important;
+}
+
+/* 라이트 모드에서 문서유형 분포 차트 pie sector 스타일 */
+body:not(.dark) .document-type-distribution-chart .recharts-pie-sector {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+}
+
+/* 다크 모드에서 문서유형 분포 차트 pie sector 스타일 */
+.dark .document-type-distribution-chart .recharts-pie-sector {
+  stroke: #1f2937 !important;
+  stroke-width: 2 !important;
+}
+
+/* 주간활동 차트 전용 스타일 */
+.weekly-activity-chart .recharts-surface {
+  z-index: 10 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.weekly-activity-chart .recharts-wrapper {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+.weekly-activity-chart .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+}
+
+.weekly-activity-chart .recharts-dot,
+.weekly-activity-chart .recharts-area-dot {
+  stroke-width: 3 !important;
+  r: 6 !important;
+}
+
+/* 라이트 모드에서 주간활동 차트 dot 스타일 */
+body:not(.dark) .weekly-activity-chart .recharts-dot,
+body:not(.dark) .weekly-activity-chart .recharts-area-dot {
+  stroke: #1e293b !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
+}
+
+/* 다크 모드에서 주간활동 차트 dot 스타일 */
+.dark .weekly-activity-chart .recharts-dot,
+.dark .weekly-activity-chart .recharts-area-dot {
+  stroke: #ffffff !important;
+  stroke-width: 2 !important;
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.2)) !important;
+}
+
+/* 주간활동 차트 activeDot 스타일 */
+.weekly-activity-chart .recharts-active-dot {
+  stroke-width: 4 !important;
+  r: 8 !important;
+}
+
+/* 라이트 모드에서 주간활동 차트 activeDot 스타일 */
+body:not(.dark) .weekly-activity-chart .recharts-active-dot {
+  stroke: #1e293b !important;
+  stroke-width: 4 !important;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* 다크 모드에서 주간활동 차트 activeDot 스타일 */
+.dark .weekly-activity-chart .recharts-active-dot {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 3px 8px rgba(255, 255, 255, 0.3)) !important;
+}
+
+/* 주간 단어 수 추이 차트 전용 스타일 */
+.weekly-words-trend-chart .recharts-surface {
+  z-index: 10 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.weekly-words-trend-chart .recharts-wrapper {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+.weekly-words-trend-chart .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+}
+
+.weekly-words-trend-chart .recharts-dot {
+  stroke-width: 3 !important;
+  r: 5 !important;
+}
+
+/* 라이트 모드에서 주간 단어 수 추이 차트 dot 스타일 */
+body:not(.dark) .weekly-words-trend-chart .recharts-dot {
+  stroke: #1e293b !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)) !important;
+}
+
+/* 다크 모드에서 주간 단어 수 추이 차트 dot 스타일 */
+.dark .weekly-words-trend-chart .recharts-dot {
+  stroke: #ffffff !important;
+  stroke-width: 2 !important;
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.2)) !important;
+}
+
+/* 주간 단어 수 추이 차트 activeDot 스타일 */
+.weekly-words-trend-chart .recharts-active-dot {
+  stroke-width: 4 !important;
+  r: 7 !important;
+}
+
+/* 라이트 모드에서 주간 단어 수 추이 차트 activeDot 스타일 */
+body:not(.dark) .weekly-words-trend-chart .recharts-active-dot {
+  stroke: #1e293b !important;
+  stroke-width: 4 !important;
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* 다크 모드에서 주간 단어 수 추이 차트 activeDot 스타일 */
+.dark .weekly-words-trend-chart .recharts-active-dot {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 3px 8px rgba(255, 255, 255, 0.3)) !important;
+}
+
+/* 다크 모드에서 주간 단어 수 추이 차트 activeDot 스타일 */
+.dark .weekly-words-trend-chart .recharts-active-dot {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 3px 8px rgba(255, 255, 255, 0.3)) !important;
+}
+
+/* 문서구성 분석 차트 전용 스타일 */
+.document-composition-chart .recharts-surface {
+  z-index: 10 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.document-composition-chart .recharts-wrapper {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+.document-composition-chart .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+}
+
+.document-composition-chart .recharts-pie {
+  z-index: 15 !important;
+}
+
+.document-composition-chart .recharts-pie-sector {
+  stroke-width: 2 !important;
+}
+
+/* 라이트 모드에서 문서구성 분석 차트 pie sector 스타일 */
+body:not(.dark) .document-composition-chart .recharts-pie-sector {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+}
+
+/* 다크 모드에서 문서구성 분석 차트 pie sector 스타일 */
+.dark .document-composition-chart .recharts-pie-sector {
+  stroke: #1f2937 !important;
+  stroke-width: 2 !important;
+}
+
+/* 텍스트 밀도 차트 전용 스타일 */
+.text-density-chart .recharts-surface {
+  z-index: 10 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.text-density-chart .recharts-wrapper {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+.text-density-chart .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+}
+
+.text-density-chart .recharts-pie {
+  z-index: 15 !important;
+}
+
+.text-density-chart .recharts-pie-sector {
+  stroke-width: 2 !important;
+}
+
+/* 라이트 모드에서 텍스트 밀도 차트 pie sector 스타일 */
+body:not(.dark) .text-density-chart .recharts-pie-sector {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+}
+
+/* 다크 모드에서 텍스트 밀도 차트 pie sector 스타일 */
+.dark .text-density-chart .recharts-pie-sector {
+  stroke: #1f2937 !important;
+  stroke-width: 2 !important;
+}
+
+/* 가독성 점수 차트 전용 스타일 */
+.readability-score-chart .recharts-surface {
+  z-index: 10 !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.readability-score-chart .recharts-wrapper {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: visible !important;
+}
+
+.readability-score-chart .recharts-responsive-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  overflow: visible !important;
+}
+
+.readability-score-chart .recharts-pie {
+  z-index: 15 !important;
+}
+
+.readability-score-chart .recharts-pie-sector {
+  stroke-width: 2 !important;
+}
+
+/* 라이트 모드에서 가독성 점수 차트 pie sector 스타일 */
+body:not(.dark) .readability-score-chart .recharts-pie-sector {
+  stroke: #ffffff !important;
+  stroke-width: 3 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+}
+
+/* 다크 모드에서 가독성 점수 차트 pie sector 스타일 */
+.dark .readability-score-chart .recharts-pie-sector {
+  stroke: #1f2937 !important;
+  stroke-width: 2 !important;
+}
+
+/* 다크모드에서 툴팁 텍스트 색상 개선 */
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  color: #ffffff !important;
+}
+
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-label {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item-list .recharts-tooltip-item {
+  color: #e2e8f0 !important;
+}
+
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item-list .recharts-tooltip-item .recharts-tooltip-item-name,
+.dark .recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item-list .recharts-tooltip-item .recharts-tooltip-item-value {
+  color: #e2e8f0 !important;
+}
+
+/* 라이트모드에서 툴팁 개선 */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: rgba(255, 255, 255, 0.98) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+  color: #1e293b !important;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-label {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item-list .recharts-tooltip-item {
+  color: #334155 !important;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item-list .recharts-tooltip-item .recharts-tooltip-item-name,
+.recharts-tooltip-wrapper .recharts-default-tooltip .recharts-tooltip-item-list .recharts-tooltip-item .recharts-tooltip-item-value {
+  color: #334155 !important;
+}
+
+/* 차트 클릭 시 outline 제거 */
+.recharts-surface,
+.recharts-pie-sector,
+.recharts-area,
+.recharts-line,
+.recharts-bar,
+.recharts-dot,
+.recharts-active-dot,
+.recharts-sector,
+.recharts-wrapper,
+.recharts-responsive-container,
+.recharts-pie {
+  outline: none !important;
+  border: none !important;
+}
+
+.recharts-surface:focus,
+.recharts-pie-sector:focus,
+.recharts-area:focus,
+.recharts-line:focus,
+.recharts-bar:focus,
+.recharts-dot:focus,
+.recharts-active-dot:focus,
+.recharts-sector:focus,
+.recharts-wrapper:focus,
+.recharts-responsive-container:focus,
+.recharts-pie:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* SVG 요소들의 포커스 스타일 제거 */
+svg:focus,
+svg *:focus {
+  outline: none !important;
+  border: none !important;
+}
+
+/* 모든 recharts 관련 요소들의 포커스 상태 제거 */
+[class*="recharts"]:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Prevent horizontal scrollbars */
+.document-composition-chart,
+.text-density-chart,
+.readability-score-chart {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+
+/* Fix for Google 문서 badge */
+.whitespace-nowrap {
+  white-space: nowrap !important;
+}
+
+/* ServicesSection 애니메이션 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+.animate-pulse-hover:hover {
+  animation: pulse 0.5s ease-in-out;
+}
+
+/* 딜레이 클래스들 */
+.delay-0 { animation-delay: 0s !important; }
+.delay-50 { animation-delay: 0.05s !important; }
+.delay-100 { animation-delay: 0.1s !important; }
+.delay-150 { animation-delay: 0.15s !important; }
+.delay-200 { animation-delay: 0.2s !important; }
+.delay-250 { animation-delay: 0.25s !important; }
+.delay-300 { animation-delay: 0.3s !important; }
+.delay-350 { animation-delay: 0.35s !important; }
+.delay-400 { animation-delay: 0.4s !important; }
+.delay-450 { animation-delay: 0.45s !important; }
+.delay-500 { animation-delay: 0.5s !important; }
+.delay-550 { animation-delay: 0.55s !important; }
+.delay-600 { animation-delay: 0.6s !important; }
+.delay-650 { animation-delay: 0.65s !important; }
+.delay-700 { animation-delay: 0.7s !important; }
+.delay-750 { animation-delay: 0.75s !important; }
+.delay-800 { animation-delay: 0.8s !important; }
+.delay-850 { animation-delay: 0.85s !important; }
+.delay-900 { animation-delay: 0.9s !important; }
+.delay-950 { animation-delay: 0.95s !important; }
+.delay-1000 { animation-delay: 1.0s !important; }
+.delay-1100 { animation-delay: 1.1s !important; }
+.delay-1200 { animation-delay: 1.2s !important; }
+.delay-1300 { animation-delay: 1.3s !important; }
+.delay-1400 { animation-delay: 1.4s !important; }
+.delay-1500 { animation-delay: 1.5s !important; }

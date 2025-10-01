@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/appIcon.webp" />
+    <link rel="icon" href="%PUBLIC_URL%/appIcon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Loop Novel은 소설 작가와 창작팀을 위한 올인원 집필 도구입니다. 챕터 관리, 캐릭터 설정, 시놉시스 작성, 실시간 협업을 하나의 플랫폼에서 경험하세요. Windows, macOS, Linux 무료 다운로드 가능."
+    />
+    <meta name="keywords" content="Loop Novel, 루프, 소설 쓰기, 집필 프로그램, 작가 도구, 웹소설 작성, 챕터 관리, 캐릭터 관리, 시놉시스, 창작 협업, 무료 집필 도구, Windows, macOS, Linux" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Loop Novel" />
+    <meta property="og:title" content="Loop Novel - 소설 작가를 위한 무료 집필 도구" />
+    <meta property="og:description" content="챕터 관리, 캐릭터 설정, 시놉시스 작성, 실시간 협업을 하나의 플랫폼에서. Windows, macOS, Linux 무료 다운로드" />
+    <meta property="og:image" content="%PUBLIC_URL%/appIcon.webp" />
+    <meta property="og:image" content="%PUBLIC_URL%/appIcon.png" />
+    <meta property="og:url" content="/" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Loop Novel - 소설 작가를 위한 무료 집필 도구" />
+    <meta name="twitter:description" content="챕터 관리, 캐릭터 설정, 시놉시스 작성, 실시간 협업을 하나의 플랫폼에서. Windows, macOS, Linux 무료 다운로드" />
+    <meta name="twitter:image" content="%PUBLIC_URL%/appIcon.webp" />
+    <meta name="twitter:image" content="%PUBLIC_URL%/appIcon.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>Loop Novel - 소설 작가를 위한 무료 집필 도구 | 챕터·캐릭터·협업 관리</title>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Loop Novel",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Windows, macOS, Linux",
+        "description": "작가와 창작 팀을 위한 통합 집필·프로젝트 협업 도구. 문서 편집, 프로젝트 관리, 대시보드, 팀 협업을 지원합니다.",
+        "image": "%PUBLIC_URL%/appIcon.webp",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        }
+      }
+    </script>
+    <style>
+      /* 로딩 중 표시할 기본 스타일 */
+      .loading-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        z-index: 9999;
+      }
+      .loading-spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #4285f4;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 16px;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      .loading-text {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .loading-subtext {
+        color: #999;
+        font-size: 14px;
+        text-align: center;
+        max-width: 300px;
+      }
+      /* 다크 모드 지원 */
+      @media (prefers-color-scheme: dark) {
+        .loading-container {
+          background: #1a1a1a;
+        }
+        .loading-text {
+          color: #e0e0e0;
+        }
+        .loading-subtext {
+          color: #999;
+        }
+        .loading-spinner {
+          border-color: #333;
+          border-top-color: #4285f4;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>
+      <div class="loading-container">
+        <div style="text-align: center;">
+          <h1 style="color: #333; margin-bottom: 16px;">Loop - 통합 협업 도구</h1>
+          <p style="color: #666; margin-bottom: 24px;">JavaScript를 활성화해주세요</p>
+          <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; max-width: 400px;">
+            <h3 style="color: #333; margin-bottom: 12px;">JavaScript 활성화 방법:</h3>
+            <ol style="text-align: left; color: #666; line-height: 1.6;">
+              <li>브라우저 설정으로 이동</li>
+              <li>개인정보 보호 및 보안 섹션 찾기</li>
+              <li>JavaScript 활성화 옵션 선택</li>
+              <li>페이지 새로고침</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </noscript>
+    <div id="root">
+      <!-- JavaScript가 비활성화되었거나 로딩 중일 때 표시될 내용 -->
+      <div class="loading-container" id="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loop 로딩 중...</div>
+        <div class="loading-subtext">통합 협업 도구를 준비하고 있습니다</div>
+      </div>
+    </div>
+    
+    <script>
+      // 앱이 로드되면 로딩 화면 숨기기
+      window.addEventListener('load', function() {
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) {
+          loadingScreen.style.opacity = '0';
+          loadingScreen.style.transition = 'opacity 0.3s ease-out';
+          setTimeout(function() {
+            loadingScreen.style.display = 'none';
+          }, 300);
+        }
+      });
+      
+      // React 앱이 마운트되면 로딩 화면 제거
+      document.addEventListener('DOMContentLoaded', function() {
+        // 3초 후에도 React 앱이 로드되지 않으면 로딩 화면 숨기기
+        setTimeout(function() {
+          const loadingScreen = document.getElementById('loading-screen');
+          const rootElement = document.getElementById('root');
+          if (loadingScreen && rootElement && rootElement.children.length <= 1) {
+            loadingScreen.innerHTML = '<div style="text-align: center; color: #666;"><h2>앱 로딩에 시간이 걸리고 있습니다</h2><p>잠시만 기다려주세요...</p></div>';
+          }
+        }, 3000);
+      });
+    </script>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see a loading screen instead of empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
