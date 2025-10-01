@@ -5,72 +5,90 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Windows11Icon, MacOSIcon, UbuntuIcon } from '../../assets/icons';
 
+type ReleaseAsset = { name: string; url: string; size?: number; content_type?: string };
+
+async function fetchLatestReleaseViaProxy(): Promise<{ version: string; assets: ReleaseAsset[] } | null> {
+  const res = await fetch('/api/releases/latest');
+  if (!res.ok) return null;
+  const data = await res.json();
+  return { version: data.version, assets: data.assets || [] };
+}
+
+async function fetchLatestReleaseDirect(): Promise<{ version: string; assets: ReleaseAsset[] } | null> {
+  const gh = await fetch('https://api.github.com/repos/maildan/loop/releases/latest', {
+    headers: { Accept: 'application/vnd.github+json' }
+  });
+  if (!gh.ok) return null;
+  const data = await gh.json();
+  const assets: ReleaseAsset[] = (data.assets || []).map((a: any) => ({ name: a.name, url: a.browser_download_url }));
+  return { version: data.tag_name, assets };
+}
+
+function detectClient() {
+  const ua = (typeof navigator !== 'undefined' ? navigator.userAgent : '').toLowerCase();
+  const platform = (typeof navigator !== 'undefined' ? navigator.platform : '' as any)?.toString().toLowerCase() || '';
+  const isMac = /mac/.test(platform) || /mac os/.test(ua) || /darwin/.test(ua);
+  const isWin = /win/.test(platform) || /windows/.test(ua);
+  const isLinux = /linux|x11|ubuntu/.test(platform) || /linux|x11|ubuntu/.test(ua);
+  const isArm = /arm|aarch64|apple/.test(ua);
+  const isX64 = /x86_64|win64|x64|amd64|intel/.test(ua);
+  const arch = isArm ? 'arm64' : isX64 ? 'x64' : 'x64';
+  return { isMac, isWin, isLinux, arch };
+}
+
+function buildMatchCombos(os: 'mac' | 'win' | 'linux', arch: 'arm64' | 'x64') {
+  const combos: string[][] = [];
+  if (os === 'mac') {
+    // Prefer DMG first, then ZIP
+    if (arch === 'arm64') {
+      combos.push(['mac', 'arm64', 'dmg'], ['mac', 'arm64', '.dmg']);
+      combos.push(['mac', 'arm64', 'zip'], ['mac', 'arm64']);
+    } else {
+      combos.push(['mac', 'x64', 'dmg'], ['mac', 'intel', 'dmg'], ['dmg', 'mac']);
+      combos.push(['mac', 'x64', 'zip'], ['mac', 'intel', 'zip'], ['zip', 'mac']);
+      combos.push(['mac', 'x64'], ['mac', 'intel']);
+    }
+    combos.push(['mac']);
+  } else if (os === 'win') {
+    // Prefer EXE first, then ZIP
+    combos.push(['win', '.exe'], ['windows', '.exe']);
+    combos.push(['win', 'x64'], ['windows', 'x64']);
+    combos.push(['win', 'zip'], ['windows', 'zip']);
+    combos.push(['win']);
+  } else {
+    combos.push(['linux', 'appimage'], ['linux', 'deb'], ['linux']);
+  }
+  return combos;
+}
+
+function selectAssetUrl(assets: ReleaseAsset[], os: 'mac' | 'win' | 'linux', arch: 'arm64' | 'x64', fallback: string) {
+  if (!assets?.length) return fallback;
+  const lower = assets.map(a => ({ ...a, lower: a.name.toLowerCase() }));
+  for (const combo of buildMatchCombos(os, arch)) {
+    const hit = lower.find(a => combo.every(c => a.lower.includes(c)));
+    if (hit) return hit.url;
+  }
+  return fallback;
+}
+
 export const DownloadSection: React.FC = () => {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const [release, setRelease] = useState<null | {
-    version: string;
-    assets: { name: string; url: string; size?: number; content_type?: string }[];
-  }>(null);
+  const [release, setRelease] = useState<null | { version: string; assets: ReleaseAsset[] }>(null);
 
   useEffect(() => {
-    // Try server proxy first; fall back to GitHub API in dev
-    const fetchLatest = async () => {
-      try {
-        let res = await fetch('/api/releases/latest');
-        if (!res.ok) throw new Error('proxy failed');
-        const data = await res.json();
-        setRelease({ version: data.version, assets: data.assets || [] });
-      } catch (e) {
-        try {
-          const gh = await fetch('https://api.github.com/repos/maildan/loop/releases/latest', {
-            headers: { 'Accept': 'application/vnd.github+json' }
-          });
-          if (!gh.ok) throw new Error('github failed');
-          const data = await gh.json();
-          setRelease({
-            version: data.tag_name,
-            assets: (data.assets || []).map((a: any) => ({ name: a.name, url: a.browser_download_url }))
-          });
-        } catch {
-          setRelease(null);
-        }
-      }
-    };
-    fetchLatest();
+    (async () => {
+      const fromProxy = await fetchLatestReleaseViaProxy();
+      if (fromProxy) return setRelease(fromProxy);
+      const fromGh = await fetchLatestReleaseDirect();
+      if (fromGh) return setRelease(fromGh);
+      setRelease(null);
+    })();
   }, []);
 
-  const client = useMemo(() => {
-    const ua = navigator.userAgent.toLowerCase();
-    const platform = navigator.platform?.toLowerCase() || '';
-    const isMac = platform.includes('mac') || ua.includes('mac os');
-    const isWin = platform.includes('win') || ua.includes('windows');
-    const isLinux = platform.includes('linux') || ua.includes('x11') || ua.includes('ubuntu');
-    // Rudimentary arch detection
-    const uaArch = (navigator as any).userAgentData?.architecture || (ua.includes('arm') || ua.includes('aarch64') ? 'arm64' : 'x64');
-    const arch = /arm|aarch64|apple/.test(ua) ? 'arm64' : /x86_64|win64|x64|amd64|intel/.test(ua) ? 'x64' : uaArch;
-    return { isMac, isWin, isLinux, arch };
-  }, []);
+  const client = useMemo(() => detectClient(), []);
 
-  const pickAssetUrl = (os: 'mac' | 'win' | 'linux', fallback: string) => {
-    if (!release) return fallback;
-    const { assets } = release;
-    const byName = (substrs: string[]) => assets.find(a => substrs.every(s => a.name.toLowerCase().includes(s)))?.url;
-    switch (os) {
-      case 'mac': {
-        // Prefer dmg/zip for arm64/x64
-        if (client.arch === 'arm64') {
-          return byName(['mac', 'arm64']) || byName(['mac', 'arm64', 'zip']) || byName(['dmg']) || byName(['zip', 'mac']) || byName(['mac']) || fallback;
-        }
-        return byName(['mac', 'x64']) || byName(['mac', 'intel']) || byName(['mac', 'x64', 'zip']) || byName(['dmg']) || byName(['zip', 'mac']) || byName(['mac']) || fallback;
-      }
-      case 'win': {
-        return byName(['win', 'x64']) || byName(['win', '.exe']) || byName(['win']) || fallback;
-      }
-      case 'linux': {
-        return byName(['linux', 'appimage']) || byName(['linux', 'deb']) || byName(['linux']) || fallback;
-      }
-    }
-  };
+  const pickAssetUrl = (os: 'mac' | 'win' | 'linux', fallback: string) =>
+    selectAssetUrl(release?.assets || [], os, client.arch as 'arm64' | 'x64', fallback);
 
   const downloadData = {
     novel: {
