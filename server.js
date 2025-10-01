@@ -6,6 +6,11 @@ const helmet = require('helmet');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.GH_TOKEN || '';
+
+// Simple in-memory cache for GitHub releases
+let latestReleaseCache = { data: null, ts: 0 };
+const RELEASE_CACHE_MS = 10 * 60 * 1000; // 10 minutes
 
 // 보안 헤더 설정
 app.use(helmet({
@@ -16,7 +21,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "fonts.googleapis.com"],
       fontSrc: ["'self'", "fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"]
+      connectSrc: ["'self'", "https://api.github.com"]
     }
   }
 }));
@@ -32,6 +37,44 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
     memory: process.memoryUsage()
   });
+});
+
+// Latest GitHub release proxy (caches for 10 minutes)
+app.get('/api/releases/latest', async (req, res) => {
+  try {
+    const now = Date.now();
+    if (latestReleaseCache.data && now - latestReleaseCache.ts < RELEASE_CACHE_MS) {
+      res.set('Cache-Control', 'public, max-age=300');
+      return res.status(200).json(latestReleaseCache.data);
+    }
+
+    const headers = { 'Accept': 'application/vnd.github+json', 'User-Agent': 'loop-web' };
+    if (GITHUB_TOKEN) headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
+
+    const fetchFn = typeof fetch === 'function' ? fetch : (await import('node-fetch')).default;
+    const ghRes = await fetchFn('https://api.github.com/repos/maildan/loop/releases/latest', { headers });
+    if (!ghRes.ok) {
+      return res.status(ghRes.status).json({ error: 'Failed to fetch latest release' });
+    }
+    const data = await ghRes.json();
+    const simplified = {
+      version: data.tag_name,
+      name: data.name,
+      notes: data.body || '',
+      published_at: data.published_at,
+      assets: Array.isArray(data.assets) ? data.assets.map(a => ({
+        name: a.name,
+        url: a.browser_download_url,
+        size: a.size,
+        content_type: a.content_type
+      })) : []
+    };
+    latestReleaseCache = { data: simplified, ts: now };
+    res.set('Cache-Control', 'public, max-age=300');
+    return res.status(200).json(simplified);
+  } catch (e) {
+    return res.status(500).json({ error: 'Failed to fetch latest release' });
+  }
 });
 
 // 정적 파일 서빙
