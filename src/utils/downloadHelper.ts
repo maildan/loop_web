@@ -159,8 +159,13 @@ export function selectAssetForPlatform(
       );
     }
   } else if (platform.os === 'windows') {
-    // Windows: prioritize EXE, then ZIP
+    // Windows: prioritize Setup EXE first, then regular EXE, then ZIP
     patterns.push(
+      ['web', 'setup', '.exe'],
+      ['setup', '.exe'],
+      ['-setup-', '.exe'],
+      ['win', 'setup', '.exe'],
+      ['windows', 'setup', '.exe'],
       ['win', '.exe'],
       ['windows', '.exe'],
       ['.exe'],
