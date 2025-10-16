@@ -135,27 +135,33 @@ export function selectAssetForPlatform(
     // macOS: prioritize DMG, then ZIP
     if (platform.arch === 'arm64') {
       patterns.push(
+        ['arm64', 'mac', '.dmg'],
+        ['arm64', '.dmg'],
+        ['arm', 'mac', '.dmg'],
         ['mac', 'arm64', '.dmg'],
-        ['mac', 'arm', '.dmg'],
         ['macos', 'arm64', '.dmg'],
-        ['.dmg', 'arm64'],
-        ['.dmg', 'mac'],
+        ['arm64', 'mac', '.zip'],
+        ['arm64', '.zip'],
+        ['arm', 'mac', '.zip'],
         ['mac', 'arm64', '.zip'],
-        ['mac', 'arm', '.zip'],
-        ['.zip', 'arm64', 'mac'],
-        ['.zip', 'mac']
+        ['.zip', 'arm64']
       );
     } else {
       patterns.push(
+        ['x64', 'mac', '.dmg'],
+        ['intel', 'mac', '.dmg'],
+        ['x64', '.dmg'],
+        ['intel', '.dmg'],
         ['mac', 'x64', '.dmg'],
         ['mac', 'intel', '.dmg'],
         ['macos', 'x64', '.dmg'],
-        ['.dmg', 'x64'],
-        ['.dmg', 'mac'],
+        ['x64', 'mac', '.zip'],
+        ['intel', 'mac', '.zip'],
+        ['x64', '.zip'],
+        ['intel', '.zip'],
         ['mac', 'x64', '.zip'],
         ['mac', 'intel', '.zip'],
-        ['.zip', 'x64', 'mac'],
-        ['.zip', 'mac']
+        ['.zip', 'x64']
       );
     }
   } else if (platform.os === 'windows') {
