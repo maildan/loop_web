@@ -135,13 +135,15 @@ export function selectAssetForPlatform(
     // macOS: prioritize DMG, then ZIP
     if (platform.arch === 'arm64') {
       patterns.push(
-        ['arm64', 'mac', '.dmg'],
+        ['arm', '.dmg'],
         ['arm64', '.dmg'],
+        ['arm64', 'mac', '.dmg'],
         ['arm', 'mac', '.dmg'],
         ['mac', 'arm64', '.dmg'],
         ['macos', 'arm64', '.dmg'],
-        ['arm64', 'mac', '.zip'],
         ['arm64', '.zip'],
+        ['arm64', 'mac', '.zip'],
+        ['arm', '.zip'],
         ['arm', 'mac', '.zip'],
         ['mac', 'arm64', '.zip'],
         ['.zip', 'arm64']
@@ -206,6 +208,29 @@ export function selectAssetForPlatform(
   // Fallback: return first asset
   console.warn('[downloadHelper] No matching asset, using first:', assets[0]?.name);
   return assets[0]?.url || null;
+}
+
+/**
+ * Download for specific macOS architecture (for manual selection)
+ */
+export async function downloadMacOS(arch: 'arm64' | 'x64'): Promise<boolean> {
+  const release = await fetchLatestRelease();
+  if (!release) {
+    console.error('[downloadHelper] Could not fetch release');
+    alert('최신 버전을 가져올 수 없습니다. 잠시 후 다시 시도해주세요.');
+    return false;
+  }
+
+  const assetUrl = selectAssetForPlatform(release.assets, { os: 'macos', arch });
+  if (!assetUrl) {
+    console.error('[downloadHelper] No suitable macOS asset found for', arch);
+    alert('적합한 다운로드 파일을 찾을 수 없습니다. 다운로드 페이지를 확인해주세요.');
+    return false;
+  }
+
+  console.log('[downloadHelper] Opening macOS download:', assetUrl, 'for arch:', arch);
+  window.open(assetUrl, '_blank');
+  return true;
 }
 
 /**
